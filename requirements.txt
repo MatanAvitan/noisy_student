@@ -1,2 +1,9 @@
-cython
+numpy==1.17.4
+pytorch=1.4.0
+openpifpaf==0.10.0
 pycocotools
+torchvision
+opencv
+pillow
+matplotplib
+cython
