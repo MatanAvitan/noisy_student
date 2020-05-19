@@ -84,3 +84,11 @@ class Teacher(Model):
                                                     image_cpu=images_batch)
             print(from_pred_results)
             break
+
+    def get_score(self, metric='certainty'):
+        """
+        Needed to be implemented.
+        :param metric:
+        :return:
+        """
+        pass

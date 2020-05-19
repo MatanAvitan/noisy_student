@@ -10,3 +10,7 @@ class Model(ABC):
     @abstractmethod
     def fit(self):
         pass
+
+    @abstractmethod
+    def get_score(self, metric):
+        pass
