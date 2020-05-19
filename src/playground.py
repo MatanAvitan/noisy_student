@@ -22,7 +22,6 @@ IMAGE_EXT = '.jpg'
 
 annFile = COCO_DATASET_PATH.joinpath('annotations/annotations_trainval2017/annotations/person_keypoints_val2017.json')
 
-
 if __name__ == '__main__':
 
     from torchvision.datasets import CocoDetection
@@ -38,7 +37,7 @@ if __name__ == '__main__':
     from pycocotools.coco import COCO
 
     # initialize COCO api for person keypoints annotations
-    coco_kps=COCO(annFile)
+    coco_kps = COCO(annFile)
 
     catIds = coco_kps.getCatIds(['person'])
     annIds = coco_kps.getAnnIds(catIds=catIds)
@@ -48,15 +47,9 @@ if __name__ == '__main__':
                                        annFile=annFile,
                                        transform=transform)
 
-
-
     import openpifpaf
 
-
-
     net_cpu, _ = openpifpaf.network.factory(checkpoint='resnet101')
-
-
 
     if torch.cuda.is_available():
         net = net_cpu.cuda()
@@ -67,7 +60,6 @@ if __name__ == '__main__':
     processor = openpifpaf.decoder.Processor(net, decode,
                                              instance_threshold=0.2,
                                              keypoint_threshold=0.3)
-
 
     batch_size = 1
 
@@ -82,17 +74,19 @@ if __name__ == '__main__':
 
     from openpifpaf.datasets import CocoKeypoints
     from openpifpaf import transforms as openpifpaf_transforms
+
     preprocess = openpifpaf_transforms.Compose([
-                openpifpaf_transforms.NormalizeAnnotations(),
-                openpifpaf_transforms.RescaleAbsolute(641),
-                openpifpaf_transforms.EVAL_TRANSFORM,
-            ])
+        openpifpaf_transforms.NormalizeAnnotations(),
+        openpifpaf_transforms.RescaleAbsolute(641),
+        openpifpaf_transforms.EVAL_TRANSFORM,
+    ])
     # Instead of using the Pytorch dataset, let's use the dataset of coco from openpifpaf
     coco_person_val_ds = CocoKeypoints(root=COCO_VAL_PATH,
                                        annFile=annFile,
                                        preprocess=preprocess,
                                        all_persons=True,
                                        all_images=False)
+
 
     def gen_plot():
         import io
@@ -104,11 +98,10 @@ if __name__ == '__main__':
         return buf
 
 
-
-
     from openpifpaf.eval_coco import EvalCoco
     from openpifpaf.transforms.preprocess import Preprocess
     from openpifpaf import datasets
+
     net_cpu, _ = openpifpaf.network.factory(checkpoint='resnet101')
     if torch.cuda.is_available():
         net = net_cpu.cuda()
@@ -140,19 +133,18 @@ if __name__ == '__main__':
         predictions = processor.annotations(fields=fields_batch[0])
 
         # initialize COCO api for person keypoints annotations
-        coco_kps=COCO(annFile)
+        coco_kps = COCO(annFile)
         ec = EvalCoco(coco_kps, processor, preprocess.annotations_inverse)
         ############################################################################################
         # This is the problematic row.
         ############################################################################################
         ec.from_predictions(predictions,
-                                meta_batch[0],
-                                debug=False,
-                                gt=ann_ids,
-                                image_cpu=images_batch)
+                            meta_batch[0],
+                            debug=False,
+                            gt=ann_ids,
+                            image_cpu=images_batch)
+        ec.stats()
         ec.write_predictions('bla')
-        ec.stats(image_ids=anns[0]['id'])
-        # predictions[0].score()
         im_arr = np.array(images_batch[0].cpu().permute(1, 2, 0))
         with openpifpaf.show.image_canvas(im_arr) as ax:
             keypoint_painter.annotations(ax, predictions)

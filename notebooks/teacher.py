@@ -106,7 +106,7 @@ class Teacher:
         ############################################################################################
 
             # initialize COCO api for person keypoints annotations
-            coco_kps=COCO(annFile)
+            coco_kps = COCO(annFile)
             ec = EvalCoco(coco_kps, processor, preprocess.annotations_inverse)
 
             from_pred_results = ec.from_predictions(predictions,
