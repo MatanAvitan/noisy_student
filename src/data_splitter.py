@@ -1,7 +1,7 @@
 import os
-from consts import TRAIN_SPLIT_PERCENTAGES, STUDENT_TEACHER_LOOP, ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR, ORIGINAL_ANNOTATIONS_DIR, ORIGINAL_TRAIN_ANNOTATION_FILE
+from consts import TRAIN_SPLIT_PERCENTAGES, STUDENT_TEACHER_LOOP, ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR, ORIGINAL_ANNOTATIONS_DIR, ORIGINAL_TRAIN_ANNOTATION_FILE, COCOSPLIT_PATH
 
-split_command = """python3 cocosplit.py \
+split_command = """python {cocsplit_path} \
                   --having-annotations \
                   -s {train_split_percentage} \
                   {annotation_file_path} \
@@ -16,10 +16,11 @@ class DataSplitter():
         self.test_output_file = test_output_file
 
     def split(self):
-        os.system(split_command.format(train_split_percentage=self.train_split_percentage,
-                                                     annotation_file_path=self.annotation_file_path,
-                                                     train_output_file=self.train_output_file,
-                                                     test_output_file=self.test_output_file))
+        os.system(split_command.format(cocosplit_path=COCOSPLIT_PATH,
+                                       train_split_percentage=self.train_split_percentage,
+                                       annotation_file_path=self.annotation_file_path,
+                                       train_output_file=self.train_output_file,
+                                       test_output_file=self.test_output_file))
 def main():
     initial_model_idx = 0
     train_split_percentage = TRAIN_SPLIT_PERCENTAGES[0]

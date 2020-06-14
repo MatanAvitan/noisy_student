@@ -31,12 +31,9 @@ COPY requirements.txt /noisy_student
 # install requirements
 RUN pip install -r requirements.txt
 
-# copy noisy_student dir
-COPY . /noisy_student
-
 # get data
 RUN if  [ ! -d "/noisy_student/src/data-mscoco" ]; then \
-        mkdir /noisy_student/src/data-mscoco && cd /noisy_student/src/data-mscoco && \
+        mkdir /noisy_student/src && mkdir /noisy_student/src/data-mscoco && cd /noisy_student/src/data-mscoco && \
         wget http://images.cocodataset.org/annotations/annotations_trainval2017.zip && \
         unzip annotations_trainval2017.zip && \
         wget http://images.cocodataset.org/annotations/image_info_test2017.zip && \
@@ -47,6 +44,9 @@ RUN if  [ ! -d "/noisy_student/src/data-mscoco" ]; then \
         wget http://images.cocodataset.org/zips/train2017.zip && \
         unzip train2017.zip ; \
     fi
+
+# copy noisy_student src dir
+COPY src /noisy_student/src
 
 # create new and original annotations directories, copy files
 RUN mkdir /noisy_student/src/data-mscoco/annotations/new
@@ -66,6 +66,7 @@ ENV ORIGINAL_TRAIN_ANNOTATION_FILE="person_keypoints_train2017.json"
 ENV ORIGINAL_VAL_ANNOTATION_FILE="person_keypoints_val2017.json"
 ENV OUTPUT_DIR="/noisy_student/outputs"
 ENV EVAL_DIR="/noisy_student/eval"
+ENV COCOSPLIT_PATH="/noisy_student/src/cocosplit.py"
 
 # split data annotations
 RUN python /noisy_student/src/data_splitter.py
