@@ -7,6 +7,6 @@ services:
     image: bestteam/noisystudent:latest
     restart: always
     volumes:
-      - data:/noisy_student/data-mscoco
+      - data:/noisy_student/src/data-mscoco
 volumes:
   data:
