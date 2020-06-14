@@ -1,7 +1,6 @@
-from student import Student
-from teacher import Teacher
-from data_splitter import DataSplitter
-from consts import NUM_TRAIN_EPOCHS, ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR, TRAIN_IMAGE_DIR, STUDENT_TEACHER_LOOP
+from src.student import Student
+from src.teacher import Teacher
+from src.consts import NUM_TRAIN_EPOCHS, ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR, TRAIN_IMAGE_DIR, STUDENT_TEACHER_LOOP
 
 
 def main():
