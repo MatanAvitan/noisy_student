@@ -1,7 +1,7 @@
 import os
 from consts import TRAIN_SPLIT_PERCENTAGES, STUDENT_TEACHER_LOOP, ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR, ORIGINAL_ANNOTATIONS_DIR, ORIGINAL_TRAIN_ANNOTATION_FILE, COCOSPLIT_PATH
 
-split_command = """python {cocsplit_path} \
+split_command = """python {cocosplit_path} \
                   --having-annotations \
                   -s {train_split_percentage} \
                   {annotation_file_path} \
