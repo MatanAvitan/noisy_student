@@ -3,6 +3,6 @@ version: '2'
 services:
   noisy_student:
     build: .
-    container_name: noisy_student
-    image: bestteam/noisy_student:latest
+    container_name: noisystudent
+    image: bestteam/noisystudent:latest
     restart: always

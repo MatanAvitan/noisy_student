@@ -7,16 +7,18 @@ RUN apt-get update && \
     sudo \
     ca-certificates \
     git \
-    bzip2 \
-    libx11-6 \
     unzip \
     wget \
     time
 
+RUN sudo apt install -y --reinstall software-properties-common
+
+RUN sudo add-apt-repository ppa:deadsnakes/ppa
+
 RUN apt-get install -y \
-    python3-pip python3-dev \
+    python3-pip python3.6 \
   && cd /usr/local/bin \
-  && ln -s /usr/bin/python3 python \
+  && ln -s /usr/bin/python3.6 python \
     && ln -s /usr/bin/pip3 pip \
   && pip install --upgrade pip
 
@@ -67,6 +69,9 @@ ENV EVAL_DIR="/noisy_student/eval"
 
 # split data annotations
 RUN python /noisy_student/src/data_splitter.py
+
+# create openpifpaf directory
+RUN cd /noisy_student/src && git clone --single-branch --branch noisy-student https://github.com/atalyaalon/openpifpaf.git
 
 # run noisy student
 CMD python /noisy_student/src/noisy_student.py
