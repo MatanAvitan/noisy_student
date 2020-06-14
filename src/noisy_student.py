@@ -25,7 +25,7 @@ def main():
                               train_image_dir=TRAIN_IMAGE_DIR,
                               train_annotations=os.path.join(ANNOTATIONS_DIR,
                                                              NEW_ANNOTATIONS_DIR,
-                                                            'annotations_file_model_idx_{model_idx}'.format(model_idx=model_idx))
+                                                            'annotations_file_model_idx_{model_idx}'.format(model_idx=model_idx)))
 
                                                              # TODO: change to: train_annotations=teacher._new_train_annotations once create_new_annotations_file(self) is implemented in teacher
 
