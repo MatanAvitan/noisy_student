@@ -30,10 +30,20 @@ TRAIN_COMMAND = """python -m openpifpaf.train \
                       --train-annotations {train_annotations} \
                       --output={model_output_file}"""
 
-EVAL_COMMAND = """python -m openpifpaf.eval_coco \
+EVAL_VAL_COMMAND = """python -m openpifpaf.eval_coco \
                   --checkpoint {model_output_file} \
                   -n 500 \
                   --long-edge=641 \
                   --write-predictions \
                   --dataset val \
+                  --output {eval_output_file}"""
+
+EVAL_OTHER_COMMAND = """python -m openpifpaf.eval_coco \
+                  --checkpoint {model_output_file} \
+                  -n 500 \
+                  --long-edge=641 \
+                  --write-predictions \
+                  --dataset other \
+                  --dataset-image-dir {dataset_image_dir} \
+                  --dataset-annotations {dataset_annotations} \
                   --output {eval_output_file}"""

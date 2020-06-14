@@ -15,7 +15,8 @@ def main():
                                                      'annotations_file_model_idx_{model_idx}'.format(model_idx=initial_model_idx)))
 
     teacher.fit()
-    teacher.get_score()
+    teacher.get_val_score()
+    teacher.create_new_data_scores_and_annotations()
 
     for model_idx in range(initial_model_idx+1, STUDENT_TEACHER_LOOP):
         new_student = Student(model_type='openpifpaf',
@@ -29,8 +30,9 @@ def main():
                                                              # TODO: change to: train_annotations=teacher._new_train_annotations once create_new_annotations_file(self) is implemented in teacher
 
         new_student.fit()
-        new_student.get_score()
         teacher = new_student
+        teacher.get_val_score()
+        teacher.create_new_data_scores_and_annotations()
 
 
 if __name__ == '__main__':

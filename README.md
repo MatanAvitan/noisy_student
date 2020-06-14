@@ -38,15 +38,18 @@ If not, try to reboot the machine using the reboot command:
 7. Optional: run the following command in tmux - run in shell:
 `tmux`
 
-8. Build the docker file:
+8. cd to the noisy_student directory:
+`cd noisy_student`
+
+9. Build the docker file:
 `sudo docker-compose build`
 
-9. Run the docker file:
+10. Run the docker file:
 `sudo docker run --gpus all --shm-size=100gb --name noisy_student bestteam/noisy_student:latest`
 
 Note: we did not use docker-compose in this stage since docker compose does not suppor NVIDIA GPUs yet - see https://github.com/docker/compose/issues/6691
 
-10. To find the trained models or logs in the docker - start the noisy_student container, and check the outputs directory:
+11. To find the trained models or logs in the docker - start the noisy_student container, and check the outputs directory:
 ```sh
 sudo docker start noisy_student
 sudo docker exec -it noisy_student bash
@@ -56,5 +59,5 @@ and run inside docker:
 
 (To exit the container use ctrl-D)
 
-11. To stop the noisy_student container run:
+12. To stop the noisy_student container run:
 `sudo docker stop noisy_student`
