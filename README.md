@@ -45,14 +45,14 @@ If not, try to reboot the machine using the reboot command:
 `sudo docker-compose build`
 
 10. Run the docker file:
-`sudo docker run --gpus all --shm-size=100gb --name noisy_student bestteam/noisy_student:latest`
+`sudo docker run --gpus all --shm-size=100gb --name noisystudent bestteam/noisystudent:latest`
 
 Note: we did not use docker-compose in this stage since docker compose does not suppor NVIDIA GPUs yet - see https://github.com/docker/compose/issues/6691
 
 11. To find the trained models or logs in the docker - start the noisy_student container, and check the outputs directory:
 ```sh
-sudo docker start noisy_student
-sudo docker exec -it noisy_student bash
+sudo docker start noisystudent
+sudo docker exec -it noisystudent bash
 ```
 and run inside docker:
 `ls outputs`
