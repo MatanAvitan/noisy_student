@@ -25,18 +25,6 @@ RUN apt-get install -y \
 # specify workdir
 WORKDIR /noisy_student
 
-# get data
-RUN mkdir /noisy_student/data-mscoco && cd /noisy_student/data-mscoco && \
-wget http://images.cocodataset.org/annotations/annotations_trainval2017.zip && \
-unzip annotations_trainval2017.zip && \
-wget http://images.cocodataset.org/annotations/image_info_test2017.zip && \
-unzip image_info_test2017.zip && \
-mkdir images && cd images && \
-wget http://images.cocodataset.org/zips/val2017.zip && \
-unzip val2017.zip && \
-wget http://images.cocodataset.org/zips/train2017.zip && \
-unzip train2017.zip
-
 # copy requirements
 COPY requirements.txt /noisy_student
 
@@ -46,7 +34,19 @@ RUN pip install -r requirements.txt
 # copy noisy_student dir
 COPY . /noisy_student
 
-RUN mv /noisy_student/data-mscoco /noisy_student/src/data-mscoco
+# get data
+RUN if  [ ! -d "/noisy_student/src/data-mscoco" ]; then \
+        mkdir /noisy_student/src/data-mscoco && cd /noisy_student/src/data-mscoco && \
+        wget http://images.cocodataset.org/annotations/annotations_trainval2017.zip && \
+        unzip annotations_trainval2017.zip && \
+        wget http://images.cocodataset.org/annotations/image_info_test2017.zip && \
+        unzip image_info_test2017.zip && \
+        mkdir images && cd images && \
+        wget http://images.cocodataset.org/zips/val2017.zip && \
+        unzip val2017.zip && \
+        wget http://images.cocodataset.org/zips/train2017.zip && \
+        unzip train2017.zip ; \
+    fi
 
 # create new and original annotations directories, copy files
 RUN mkdir /noisy_student/src/data-mscoco/annotations/new
