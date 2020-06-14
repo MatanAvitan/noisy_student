@@ -25,12 +25,6 @@ RUN apt-get install -y \
 # specify workdir
 WORKDIR /noisy_student
 
-# copy requirements
-COPY requirements.txt /noisy_student
-
-# install requirements
-RUN pip install -r requirements.txt
-
 # get data
 RUN if  [ ! -d "/noisy_student/src/data-mscoco" ]; then \
         mkdir /noisy_student/src && mkdir /noisy_student/src/data-mscoco && cd /noisy_student/src/data-mscoco && \
@@ -44,9 +38,6 @@ RUN if  [ ! -d "/noisy_student/src/data-mscoco" ]; then \
         wget http://images.cocodataset.org/zips/train2017.zip && \
         unzip train2017.zip ; \
     fi
-
-# copy noisy_student src dir
-COPY src /noisy_student/src
 
 # create new and original annotations directories, copy files
 RUN mkdir /noisy_student/src/data-mscoco/annotations/new
@@ -68,11 +59,23 @@ ENV OUTPUT_DIR="/noisy_student/outputs"
 ENV EVAL_DIR="/noisy_student/eval"
 ENV COCOSPLIT_PATH="/noisy_student/src/cocosplit.py"
 
+# copy requirements
+COPY requirements.txt /noisy_student
+
+# install requirements
+RUN pip install -r requirements.txt
+
+# copy requirements
+COPY src/data_splitter.py /noisy_student/src
+
 # split data annotations
 RUN python /noisy_student/src/data_splitter.py
 
 # create openpifpaf directory
 RUN cd /noisy_student/src && git clone --single-branch --branch noisy-student https://github.com/atalyaalon/openpifpaf.git
+
+# copy noisy_student src dir
+COPY src /noisy_student/src
 
 # run noisy student
 CMD python /noisy_student/src/noisy_student.py
