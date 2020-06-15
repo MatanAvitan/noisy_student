@@ -1,13 +1,6 @@
 version: '2'
 
 services:
-  data_creator:
-    build: data_creator
-    container_name: datacreator
-    image: bestteam/datacreator:latest
-    restart: always
-    volumes:
-      - data:/noisy_student
   noisy_student:
     build: .
     container_name: noisystudent
@@ -17,5 +10,12 @@ services:
       - data:/noisy_student
     depends_on:
       - data_creator
+  data_creator:
+    build: data_creator
+    container_name: datacreator
+    image: bestteam/datacreator:latest
+    restart: always
+    volumes:
+      - data:/noisy_student
 volumes:
   data:
