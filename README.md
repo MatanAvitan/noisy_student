@@ -49,7 +49,7 @@ If not, try to reboot the machine using the reboot command:
 
 Note: we did not use docker-compose in this stage since docker compose does not suppor NVIDIA GPUs yet - see https://github.com/docker/compose/issues/6691
 
-11. To find the trained models or logs in the docker - start the noisy_student container, and check the outputs directory:
+11. To find the trained models or logs in the docker - start the noisystudent container, and check the outputs directory:
 ```sh
 sudo docker start noisystudent
 sudo docker exec -it noisystudent bash
@@ -59,5 +59,8 @@ and run inside docker:
 
 (To exit the container use ctrl-D)
 
-12. To stop the noisy_student container run:
-`sudo docker stop noisy_student`
+12. To stop the noisystudent container run:
+`sudo docker stop noisystudent`
+
+13. To clear the containers run:
+`sudo docker container rm $(sudo docker container ls -aq)`
