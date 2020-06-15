@@ -7,7 +7,7 @@ services:
     image: bestteam/datacreator:latest
     restart: always
     volumes:
-      - data:/noisy_student/src/data-mscoco
+      - data:/noisy_student
   noisy_student:
     build: .
     container_name: noisystudent
