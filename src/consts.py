@@ -15,13 +15,13 @@ OPENPIFPAF_PATH = os.getenv('OPENPIFPAF_PATH')
 
 TRAIN_COMMAND = """cd {openpifpaf_path} && \
                    python -m openpifpaf.train \
-                       --lr=0.05 \
+                       --lr=0.1 \
                        --momentum=0.9 \
                        --epochs={num_train_epochs} \
                        --lr-warm-up-epochs=1 \
-                       --lr-decay 220 \
-                       --lr-decay-epochs=30 \
-                       --lr-decay-factor=0.01 \
+                       --lr-decay 120 \
+                       --lr-decay-epochs=20 \
+                       --lr-decay-factor=0.1 \
                        --batch-size=32 \
                        --square-edge=385 \
                        --lambdas 1 1 0.2   1 1 1 0.2 0.2    1 1 1 0.2 0.2 \
@@ -29,6 +29,8 @@ TRAIN_COMMAND = """cd {openpifpaf_path} && \
                        --weight-decay=1e-5 \
                        --update-batchnorm-runningstatistics \
                        --ema=0.01 \
+                       --basenet=shufflenetv2k16w
+                       --headnets cif caf caf25
                        --train-image-dir {train_image_dir} \
                        --train-annotations {train_annotations} \
                        --output={model_output_file}"""
