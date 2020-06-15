@@ -29,8 +29,8 @@ TRAIN_COMMAND = """cd {openpifpaf_path} && \
                        --weight-decay=1e-5 \
                        --update-batchnorm-runningstatistics \
                        --ema=0.01 \
-                       --basenet=shufflenetv2k16w
-                       --headnets cif caf caf25
+                       --basenet=shufflenetv2k16w \
+                       --headnets cif caf caf25 \
                        --coco-train-image-dir {train_image_dir} \
                        --cocokp-train-annotations {train_annotations} \
                        --output={model_output_file}"""
