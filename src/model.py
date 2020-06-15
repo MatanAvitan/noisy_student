@@ -32,8 +32,8 @@ class Model(object):
         """
         if metric == 'oks':
             checkpoint = self._model_output_file
-            os.system(EVAL_VAL_COMMAND.format(model_output_file=self._model_output_file,
-                                              model_eval_file=self._eval_output_file))
+            os.system(EVAL_VAL_COMMAND.format(model_output_file=checkpoint,
+                                              eval_output_file=self._eval_output_file))
 
     def select_new_images(self):
         # TODO - select images from teacher predictions (using self._model_eval_file)
