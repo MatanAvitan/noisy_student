@@ -12,5 +12,3 @@ pillow<7
 matplotlib
 pycocotools-fix
 opencv-python
-sklearn
-argparse
