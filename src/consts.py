@@ -31,8 +31,8 @@ TRAIN_COMMAND = """cd {openpifpaf_path} && \
                        --ema=0.01 \
                        --basenet=shufflenetv2k16w
                        --headnets cif caf caf25
-                       --train-image-dir {train_image_dir} \
-                       --train-annotations {train_annotations} \
+                       --coco-train-image-dir {train_image_dir} \
+                       --cocokp-train-annotations {train_annotations} \
                        --output={model_output_file}"""
 
 EVAL_VAL_COMMAND = """cd {openpifpaf_path} && \
