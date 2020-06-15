@@ -4,7 +4,7 @@ import os
 
 class Teacher(Model):
     def __init__(self, model_type, model_idx, num_train_epochs, train_image_dir, train_annotations):
-        super(Model, self).__init__(model_type, model_idx, num_train_epochs, train_image_dir, train_annotations)
+        super(Teacher, self).__init__(model_type, model_idx, num_train_epochs, train_image_dir, train_annotations)
 
 
     def create_new_annotations_file(self):
