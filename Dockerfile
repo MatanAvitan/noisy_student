@@ -65,8 +65,11 @@ COPY requirements.txt /noisy_student
 # install requirements
 RUN pip install -r requirements.txt
 
-# copy requirements
+# copy data splitter
 COPY src/data_splitter.py /noisy_student/src
+
+# copy init
+COPY src/__init__.py /noisy_student/src
 
 # split data annotations
 RUN python /noisy_student/src/data_splitter.py
