@@ -34,10 +34,6 @@ RUN mkdir /noisy_student/src/data-mscoco/annotations/original
 RUN mv /noisy_student/src/data-mscoco/annotations/person_keypoints_train2017.json /noisy_student/src/data-mscoco/annotations/original
 RUN mv /noisy_student/src/data-mscoco/annotations/person_keypoints_val2017.json /noisy_student/src/data-mscoco/annotations/original
 
-# make output and eval dirs
-RUN mkdir /noisy_student/src/outputs
-RUN mkdir /noisy_student/src/eval
-
 # Set Environment Variables
 ENV ANNOTATIONS_DIR="/noisy_student/src/data-mscoco/annotations"
 ENV NEW_ANNOTATIONS_DIR="new"
