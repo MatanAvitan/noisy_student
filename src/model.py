@@ -31,7 +31,7 @@ class Model(object):
         :return: Average score for all of the training epochs
         """
         if metric == 'oks':
-            checkpoint = self.output_file
+            checkpoint = self._model_output_file
             os.system(EVAL_VAL_COMMAND.format(model_output_file=self._model_output_file,
                                               model_eval_file=self._eval_output_file))
 
