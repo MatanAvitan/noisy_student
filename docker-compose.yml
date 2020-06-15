@@ -6,8 +6,8 @@ services:
     container_name: noisystudent
     image: bestteam/noisystudent:latest
     restart: always
-    volumes:
-      - data:/noisy_student
+    volumes_from:
+      - data_creator
     depends_on:
       - data_creator
   data_creator:
