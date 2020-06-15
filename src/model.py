@@ -1,6 +1,6 @@
 import os
 import logging
-from consts import OUTPUT_DIR, EVAL_DIR, TRAIN_COMMAND, EVAL_VAL_COMMAND, EVAL_OTHER_COMMAND
+from consts import OUTPUT_DIR, EVAL_DIR, TRAIN_COMMAND, EVAL_VAL_COMMAND, EVAL_OTHER_COMMAND, OPENPIFPAF_PATH
 
 
 class Model(object):
@@ -23,7 +23,8 @@ class Model(object):
         self._next_gen_annotations = next_gen_annotations
 
     def fit(self):
-        os.system(TRAIN_COMMAND.format(num_train_epochs=self._num_train_epochs,
+        os.system(TRAIN_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
+                                       num_train_epochs=self._num_train_epochs,
                                        train_image_dir=self._train_image_dir,
                                        train_annotations=self._train_annotations,
                                        model_output_file=self._model_output_file))
@@ -35,7 +36,8 @@ class Model(object):
         """
         if metric == 'oks':
             checkpoint = self._model_output_file
-            os.system(EVAL_VAL_COMMAND.format(model_output_file=checkpoint,
+            os.system(EVAL_VAL_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
+                                              model_output_file=checkpoint,
                                               eval_output_file=self._eval_output_file))
 
     def select_new_images(self):
@@ -48,7 +50,8 @@ class Model(object):
         :return: Average score for all of the training epochs
         """
         if os.path.exists(self._next_gen_annotations):
-            os.system(EVAL_OTHER_COMMAND.format(model_output_file=self._model_output_file,
+            os.system(EVAL_OTHER_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
+                                                model_output_file=self._model_output_file,
                                                 dataset_image_dir=self._train_image_dir,
                                                 dataset_annotations=self._next_gen_annotations,
                                                 eval_output_file=self._new_data_eval_file))

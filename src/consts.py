@@ -11,8 +11,9 @@ ORIGINAL_TRAIN_ANNOTATION_FILE = os.getenv('ORIGINAL_TRAIN_ANNOTATION_FILE')
 TRAIN_IMAGE_DIR = os.getenv('TRAIN_IMAGE_DIR')
 OUTPUT_DIR = os.getenv('OUTPUT_DIR')
 EVAL_DIR = os.getenv('OUTPUT_DIR')
+OPENPIFPAF_PATH = os.getenv('OPENPIFPAF_PATH')
 
-TRAIN_COMMAND = """cd openpifpaf && \
+TRAIN_COMMAND = """cd {openpifpaf_path} && \
                    python -m openpifpaf.train \
                        --lr=0.05 \
                        --momentum=0.9 \
@@ -32,7 +33,7 @@ TRAIN_COMMAND = """cd openpifpaf && \
                        --train-annotations {train_annotations} \
                        --output={model_output_file}"""
 
-EVAL_VAL_COMMAND = """cd openpifpaf && \
+EVAL_VAL_COMMAND = """cd {openpifpaf_path} && \
                       python -m openpifpaf.eval_coco \
                           --checkpoint {model_output_file} \
                           -n 500 \
@@ -41,7 +42,7 @@ EVAL_VAL_COMMAND = """cd openpifpaf && \
                           --dataset val \
                           --output {eval_output_file}"""
 
-EVAL_OTHER_COMMAND = """cd openpifpaf && \
+EVAL_OTHER_COMMAND = """cd {openpifpaf_path} && \
                         python -m openpifpaf.eval_coco \
                             --checkpoint {model_output_file} \
                             -n 500 \
