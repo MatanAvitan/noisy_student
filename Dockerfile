@@ -40,7 +40,7 @@ ENV NEW_ANNOTATIONS_DIR="new"
 ENV ORIGINAL_ANNOTATIONS_DIR="original"
 ENV ORIGINAL_TRAIN_ANNOTATION_FILE="person_keypoints_train2017.json"
 ENV ORIGINAL_VAL_ANNOTATION_FILE="person_keypoints_val2017.json"
-ENV OUTPUT_DIR="/noisy_student/outputs"
+ENV OUTPUT_DIR="/noisy_student/src/outputs"
 ENV EVAL_DIR="/noisy_student/eval"
 ENV OPENPIFPAF_PATH="/noisy_student/src/openpifpaf"
 
