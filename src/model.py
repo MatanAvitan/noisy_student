@@ -65,7 +65,7 @@ class Model(object):
         for file in files_list:
             cmd = 'git add ' + file + ' && ' \
                 + 'git commit -m "add stats file' + \
-                ' && ' + 'git push origin {branch_name}'.format('noisy-student-flow')
+                ' && ' + 'git push origin {branch_name}'.format(branch_name='noisy-student-flow')
             os.system(cmd)
 
     def upload_data_to_tensorboard(self):
