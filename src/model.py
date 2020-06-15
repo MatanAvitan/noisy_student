@@ -1,4 +1,4 @@
-from src.consts import OUTPUT_DIR, EVAL_DIR, TRAIN_COMMAND, EVAL_VAL_COMMAND, EVAL_OTHER_COMMAND
+from consts import OUTPUT_DIR, EVAL_DIR, TRAIN_COMMAND, EVAL_VAL_COMMAND, EVAL_OTHER_COMMAND
 import os
 
 class Model(object):
@@ -35,6 +35,10 @@ class Model(object):
             os.system(EVAL_VAL_COMMAND.format(model_output_file=self._model_output_file,
                                               model_eval_file=self._eval_output_file))
 
+    def select_new_images(self):
+        # TODO - select images from teacher predictions (using self._model_eval_file)
+        pass
+
     def create_new_data_scores_and_annotations(self):
         """
         :param metric: Metric for evaluation of the model after training
@@ -42,3 +46,20 @@ class Model(object):
         """
         os.system(EVAL_OTHER_COMMAND.format(model_output_file=self._model_output_file,
                                             model_eval_file=self._new_data_eval_file))
+
+        # TODO create new annotations file
+
+    def save_results(self):
+        eval_output_stats_file = self._eval_output_file + '.stats.json'
+        new_data_eval_stats_file = self._new_data_eval_file + '.stats_json'
+
+        files_list = [eval_output_stats_file, new_data_eval_stats_file]
+        for file in files_list:
+            cmd = 'git add ' + file + ' && ' \
+                + 'git commit -m "add stats file' + \
+                ' && ' + 'git push origin {branch_name}'.format('noisy-student-flow')
+            os.system(cmd)
+
+    def upload_data_to_tensorboard(self):
+        # TODO
+        pass
