@@ -1,5 +1,5 @@
 import os
-from src.consts import TRAIN_SPLIT_PERCENTAGES, STUDENT_TEACHER_LOOP, ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR, ORIGINAL_ANNOTATIONS_DIR, ORIGINAL_TRAIN_ANNOTATION_FILE, COCOSPLIT_PATH
+from consts import TRAIN_SPLIT_PERCENTAGES, STUDENT_TEACHER_LOOP, ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR, ORIGINAL_ANNOTATIONS_DIR, ORIGINAL_TRAIN_ANNOTATION_FILE, COCOSPLIT_PATH
 
 split_command = """python {cocosplit_path} \
                   --having-annotations \
@@ -45,5 +45,6 @@ def main():
     # rename last unused_annotations_file to annotations_file
     for model_idx in range(0,STUDENT_TEACHER_LOOP-1):
        os.remove(os.path.join(ANNOTATIONS_DIR,NEW_ANNOTATIONS_DIR,'unused_annotations_file_model_idx_{model_idx}'.format(model_idx=model_idx)))
+
 if __name__ == '__main__':
     main()
