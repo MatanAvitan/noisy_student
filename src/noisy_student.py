@@ -14,7 +14,7 @@ def main():
                                                      'annotations_file_model_idx_{model_idx}'.format(model_idx=initial_model_idx)))
 
     teacher.fit()
-    teacher.get_val_score()
+    teacher.create_val_score()
     teacher.create_new_data_scores_and_annotations()
     teacher.save_results()
 
@@ -31,7 +31,7 @@ def main():
 
         new_student.fit()
         teacher = new_student
-        teacher.get_val_score()
+        teacher.create_val_score()
         teacher.create_new_data_scores_and_annotations()
         teacher.save_results()
 
