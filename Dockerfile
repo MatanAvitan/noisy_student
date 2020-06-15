@@ -71,6 +71,9 @@ COPY src/data_splitter.py /noisy_student/src
 # copy init
 COPY src/__init__.py /noisy_student/src
 
+# copy consts
+COPY src/consts.py /noisy_student/src
+
 # split data annotations
 RUN python /noisy_student/src/data_splitter.py
 
