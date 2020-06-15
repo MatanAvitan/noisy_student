@@ -58,16 +58,24 @@ COPY data_requirements.txt /noisy_student/data_creator
 RUN pip install -r /noisy_student/data_creator/data_requirements.txt
 
 # copy data splitter
-COPY ../src/data_splitter.py /noisy_student/src
+COPY data_splitter.py /noisy_student/src
 
 # copy cocosplit
-COPY ../src/cocosplit.py /noisy_student/src
+COPY cocosplit.py /noisy_student/src
 
 # copy init
-COPY ../src/__init__.py /noisy_student/src
+COPY __init__.py /noisy_student/src
 
 # copy consts
-COPY ../src/consts.py /noisy_student/src
+COPY consts.py /noisy_student/src
 
 # split data annotations
 RUN python /noisy_student/src/data_splitter.py
+
+RUN rm /noisy_student/src/consts.py
+
+RUN rm /noisy_student/src/data_splitter.py
+
+RUN rm /noisy_student/src/cocosplit.py
+
+RUN rm /noisy_student/src/__init__.py
