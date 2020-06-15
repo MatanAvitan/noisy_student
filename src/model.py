@@ -45,7 +45,7 @@ class Model(object):
         :return: Average score for all of the training epochs
         """
         os.system(EVAL_OTHER_COMMAND.format(model_output_file=self._model_output_file,
-                                            model_eval_file=self._new_data_eval_file))
+                                            eval_output_file=self._new_data_eval_file))
 
         # TODO create new annotations file
 
