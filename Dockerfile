@@ -25,6 +25,15 @@ RUN apt-get install -y \
 # specify workdir
 WORKDIR /noisy_student
 
+# copy requirements
+COPY requirements.txt /noisy_student
+
+# install requirements
+RUN pip install -r requirements.txt
+
+# copy noisy_student src dir
+COPY src /noisy_student/src
+
 # Set Environment Variables
 ENV ANNOTATIONS_DIR="/noisy_student/src/data-mscoco/annotations"
 ENV NEW_ANNOTATIONS_DIR="new"
@@ -34,15 +43,6 @@ ENV ORIGINAL_VAL_ANNOTATION_FILE="person_keypoints_val2017.json"
 ENV OUTPUT_DIR="/noisy_student/outputs"
 ENV EVAL_DIR="/noisy_student/eval"
 ENV OPENPIFPAF_PATH="/noisy_student/src/openpifpaf"
-
-# copy requirements
-COPY requirements.txt /noisy_student
-
-# install requirements
-RUN pip install -r requirements.txt
-
-# copy noisy_student src dir
-COPY src /noisy_student/src
 
 # create openpifpaf directory
 RUN cd /noisy_student/src && git clone --single-branch --branch noisy-student https://github.com/atalyaalon/openpifpaf.git
