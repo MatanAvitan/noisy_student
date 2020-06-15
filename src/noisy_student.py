@@ -1,7 +1,7 @@
+import os
 from student import Student
 from teacher import Teacher
 from consts import NUM_TRAIN_EPOCHS, ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR, TRAIN_IMAGE_DIR, STUDENT_TEACHER_LOOP
-
 
 def main():
     initial_model_idx = 0
