@@ -11,7 +11,10 @@ def main():
                       train_image_dir=TRAIN_IMAGE_DIR,
                       train_annotations=os.path.join(ANNOTATIONS_DIR,
                                                      NEW_ANNOTATIONS_DIR,
-                                                     'annotations_file_model_idx_{model_idx}'.format(model_idx=initial_model_idx)))
+                                                     'annotations_file_model_idx_{model_idx}'.format(model_idx=initial_model_idx)),
+                      next_gen_annotations=os.path.join(ANNOTATIONS_DIR,
+                                                        NEW_ANNOTATIONS_DIR,
+                                                        'annotations_file_model_idx_{model_idx}'.format(model_idx=initial_model_idx+1)))
 
     teacher.fit()
     teacher.create_val_score()
@@ -25,7 +28,10 @@ def main():
                               train_image_dir=TRAIN_IMAGE_DIR,
                               train_annotations=os.path.join(ANNOTATIONS_DIR,
                                                              NEW_ANNOTATIONS_DIR,
-                                                            'annotations_file_model_idx_{model_idx}'.format(model_idx=model_idx)))
+                                                             'annotations_file_model_idx_{model_idx}'.format(model_idx=model_idx)),
+                              next_gen_annotations=os.path.join(ANNOTATIONS_DIR,
+                                                                NEW_ANNOTATIONS_DIR,
+                                                                'annotations_file_model_idx_{model_idx}'.format(model_idx=model_idx+1)))
 
                                                              # TODO: change to: train_annotations=teacher._new_train_annotations once create_new_annotations_file(self) is implemented in teacher
 
