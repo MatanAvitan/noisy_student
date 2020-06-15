@@ -1,9 +1,9 @@
 import os
 import logging
-from consts import TRAIN_COMMAND, EVAL_VAL_COMMAND, EVAL_OTHER_COMMAND, OPENPIFPAF_PATH
+from consts import TRAIN_COMMAND, EVAL_OTHER_COMMAND, OPENPIFPAF_PATH
 
 class Model(object):
-    def __init__(self, model_type, model_idx, num_train_epochs, train_image_dir, train_annotations, next_gen_annotations):
+    def __init__(self, model_type, model_idx, num_train_epochs, train_image_dir, train_annotations, val_annotations, next_gen_annotations):
         self._model_type = model_type
         self._model_idx = model_idx
         self._model_output_file = 'model_type_{model_type}_model_no_{model_idx}'.format(model_idx=model_idx,
@@ -16,6 +16,7 @@ class Model(object):
         self._num_train_epochs = num_train_epochs
         self._train_image_dir = train_image_dir
         self._train_annotations = train_annotations
+        self._val_annotations = val_annotations
         self._next_gen_annotations = next_gen_annotations
 
     def fit(self):
@@ -32,9 +33,11 @@ class Model(object):
         """
         if metric == 'oks':
             checkpoint = self._model_output_file
-            os.system(EVAL_VAL_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
-                                              model_output_file=checkpoint,
-                                              eval_output_file=self._eval_output_file))
+            os.system(EVAL_OTHER_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
+                                                model_output_file=checkpoint,
+                                                dataset_image_dir=self._train_image_dir,
+                                                dataset_annotations=self._val_annotations,
+                                                eval_output_file=self._eval_output_file))
 
     def select_new_images(self):
         # TODO - select images from teacher predictions (using self._model_eval_file)
