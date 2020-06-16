@@ -21,13 +21,14 @@ class Model(object):
         self._next_gen_annotations = next_gen_annotations
 
     def fit(self):
-        os.system(TRAIN_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
-                                       num_train_epochs=self._num_train_epochs,
-                                       train_image_dir=self._train_image_dir,
-                                       train_annotations=self._train_annotations,
-                                       val_image_dir=self._val_image_dir,
-                                       val_annotations=self._val_annotations,
-                                       model_output_file=self._model_output_file))
+        train_process_return_value = os.system(TRAIN_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
+                                                                    num_train_epochs=self._num_train_epochs,
+                                                                    train_image_dir=self._train_image_dir,
+                                                                    train_annotations=self._train_annotations,
+                                                                    val_image_dir=self._val_image_dir,
+                                                                    val_annotations=self._val_annotations,
+                                                                    model_output_file=self._model_output_file))
+        logging.info('train_process_return_value:{}'.format(train_process_return_value))
 
     def create_val_score(self, metric='oks'):
         """
@@ -36,11 +37,12 @@ class Model(object):
         """
         if metric == 'oks':
             checkpoint = self._model_output_file
-            os.system(EVAL_OTHER_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
-                                                model_output_file=checkpoint,
-                                                dataset_image_dir=self._train_image_dir,
-                                                dataset_annotations=self._val_annotations,
-                                                eval_output_file=self._eval_output_file))
+            eval_process_return_value = os.system(EVAL_OTHER_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
+                                                                            model_output_file=checkpoint,
+                                                                            dataset_image_dir=self._train_image_dir,
+                                                                            dataset_annotations=self._val_annotations,
+                                                                            eval_output_file=self._eval_output_file))
+            logging.info('eval_process_return_value:{}'.format(eval_process_return_value))
 
     def select_new_images(self):
         # TODO - select images from teacher predictions (using self._model_eval_file)
@@ -52,11 +54,12 @@ class Model(object):
         :return: Average score for all of the training epochs
         """
         if os.path.exists(self._next_gen_annotations):
-            os.system(EVAL_OTHER_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
+            eval_process_new_data_return_value = os.system(EVAL_OTHER_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
                                                 model_output_file=self._model_output_file,
                                                 dataset_image_dir=self._train_image_dir,
                                                 dataset_annotations=self._next_gen_annotations,
                                                 eval_output_file=self._new_data_eval_file))
+            logging.info('eval_process_new_data_return_value:{}'.format(eval_process_new_data_return_value))
         else:
             logging.info('next_gen_annotations file does not exist')
 
