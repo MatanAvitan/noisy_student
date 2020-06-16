@@ -101,12 +101,18 @@ COPY requirements.txt /noisy_student
 # install requirements
 RUN pip install -r requirements.txt
 
-# create src dir and copy noisy_student src dir
+# create src dir
 RUN mkdir /noisy_student/src
-COPY src /noisy_student/src
 
 # mv data dir content into src dir
-RUN mv /noisy_student/data/* /noisy_student/src/
+RUN mv /noisy_student/data /noisy_student/src
+
+# mkdir src_files and copy src files into src_files dir
+RUN mkdir /noisy_student/src_files
+COPY src /noisy_student/src_files
+
+# mv src_files into src dir
+RUN mv /noisy_student/src_files/* /noisy_student/src
 
 # Set Environment Variables
 ENV ANNOTATIONS_DIR="/noisy_student/src/data-mscoco/annotations"
