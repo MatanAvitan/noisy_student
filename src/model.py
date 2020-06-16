@@ -39,7 +39,7 @@ class Model(object):
             checkpoint = self._model_output_file
             eval_process_return_value = os.system(EVAL_OTHER_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
                                                                             model_output_file=checkpoint,
-                                                                            dataset_image_dir=self._train_image_dir,
+                                                                            dataset_image_dir=self._val_image_dir,
                                                                             dataset_annotations=self._val_annotations,
                                                                             eval_output_file=self._eval_output_file))
             logging.info('eval_process_return_value:{}'.format(eval_process_return_value))
