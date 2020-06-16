@@ -117,6 +117,8 @@ ENV ORIGINAL_VAL_ANNOTATION_FILE="person_keypoints_val2017.json"
 ENV OUTPUT_DIR="/noisy_student/src/outputs"
 ENV EVAL_DIR="/noisy_student/src/eval"
 ENV OPENPIFPAF_PATH="/noisy_student/src/openpifpaf"
+ENV TRAIN_IMAGE_DIR="/noisy_student/data-mscoco/images/train2017"
+ENV VAL_IMAGE_DIR="/noisy_student/data-mscoco/images/val2017"
 
 # create openpifpaf directory
 RUN cd /noisy_student/src && git clone --single-branch --branch noisy-student https://github.com/atalyaalon/openpifpaf.git

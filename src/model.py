@@ -3,7 +3,7 @@ import logging
 from consts import TRAIN_COMMAND, EVAL_OTHER_COMMAND, OPENPIFPAF_PATH
 
 class Model(object):
-    def __init__(self, model_type, model_idx, num_train_epochs, train_image_dir, train_annotations, val_annotations, next_gen_annotations):
+    def __init__(self, model_type, model_idx, num_train_epochs, train_image_dir, train_annotations, val_image_dir, val_annotations, next_gen_annotations):
         self._model_type = model_type
         self._model_idx = model_idx
         self._model_output_file = 'model_type_{model_type}_model_no_{model_idx}'.format(model_idx=model_idx,
@@ -24,6 +24,8 @@ class Model(object):
                                        num_train_epochs=self._num_train_epochs,
                                        train_image_dir=self._train_image_dir,
                                        train_annotations=self._train_annotations,
+                                       val_image_dir=self._val_image_dir,
+                                       val_annotations=self._val_annotations,
                                        model_output_file=self._model_output_file))
 
     def create_val_score(self, metric='oks'):

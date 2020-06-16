@@ -1,7 +1,7 @@
 import os
 from student import Student
 from teacher import Teacher
-from consts import NUM_TRAIN_EPOCHS, ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR, TRAIN_IMAGE_DIR, STUDENT_TEACHER_LOOP, ORIGINAL_VAL_ANNOTATION_FILE, ORIGINAL_ANNOTATIONS_DIR
+from consts import NUM_TRAIN_EPOCHS, ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR, TRAIN_IMAGE_DIR, STUDENT_TEACHER_LOOP, ORIGINAL_VAL_ANNOTATION_FILE, ORIGINAL_ANNOTATIONS_DIR, VAL_IMAGE_DIR
 
 def main():
     initial_model_idx = 0
@@ -12,6 +12,7 @@ def main():
                       train_annotations=os.path.join(ANNOTATIONS_DIR,
                                                      NEW_ANNOTATIONS_DIR,
                                                      'annotations_file_model_idx_{model_idx}'.format(model_idx=initial_model_idx)),
+                      val_image_dir=VAL_IMAGE_DIR,
                       val_annotations=os.path.join(ANNOTATIONS_DIR,
                                                    ORIGINAL_ANNOTATIONS_DIR,
                                                    ORIGINAL_VAL_ANNOTATION_FILE),
@@ -32,6 +33,7 @@ def main():
                               train_annotations=os.path.join(ANNOTATIONS_DIR,
                                                              NEW_ANNOTATIONS_DIR,
                                                              'annotations_file_model_idx_{model_idx}'.format(model_idx=model_idx)),
+                              val_image_dir=VAL_IMAGE_DIR,
                               val_annotations=os.path.join(ANNOTATIONS_DIR,
                                                            ORIGINAL_ANNOTATIONS_DIR,
                                                            ORIGINAL_VAL_ANNOTATION_FILE),

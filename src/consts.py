@@ -10,6 +10,7 @@ ORIGINAL_ANNOTATIONS_DIR = os.getenv('ORIGINAL_ANNOTATIONS_DIR')
 ORIGINAL_TRAIN_ANNOTATION_FILE = os.getenv('ORIGINAL_TRAIN_ANNOTATION_FILE')
 ORIGINAL_VAL_ANNOTATION_FILE = os.getenv('ORIGINAL_VAL_ANNOTATION_FILE')
 TRAIN_IMAGE_DIR = os.getenv('TRAIN_IMAGE_DIR')
+VAL_IMAGE_DIR = os.getenv('VAL_IMAGE_DIR')
 OUTPUT_DIR = os.getenv('OUTPUT_DIR')
 EVAL_DIR = os.getenv('EVAL_DIR')
 OPENPIFPAF_PATH = os.getenv('OPENPIFPAF_PATH')
@@ -34,6 +35,8 @@ TRAIN_COMMAND = """cd {openpifpaf_path} && \
                        --headnets cif caf caf25 \
                        --coco-train-image-dir {train_image_dir} \
                        --cocokp-train-annotations {train_annotations} \
+                       --coco-val-image-dir {val_image_dir} \
+                       --cocokp-val-annotations {val_annotations} \
                        --output={model_output_file}"""
 
 EVAL_OTHER_COMMAND = """cd {openpifpaf_path} && \
