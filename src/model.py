@@ -16,6 +16,7 @@ class Model(object):
         self._num_train_epochs = num_train_epochs
         self._train_image_dir = train_image_dir
         self._train_annotations = train_annotations
+        self._val_image_dir = val_image_dir
         self._val_annotations = val_annotations
         self._next_gen_annotations = next_gen_annotations
 
