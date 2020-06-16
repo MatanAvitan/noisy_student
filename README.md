@@ -64,3 +64,6 @@ and run inside docker:
 
 13. To clear the containers run:
 `sudo docker container rm $(sudo docker container ls -aq)`
+
+14. To pull data, clear containers, build noisy student and run noisy student:
+`git pull && sudo docker container rm $(sudo docker container ls -aq) && sudo docker-compose build && sudo docker run --gpus all --shm-size=100gb --name noisystudent bestteam/noisystudent:latest`
