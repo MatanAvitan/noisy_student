@@ -2,7 +2,7 @@ import os
 import logging
 from student import Student
 from teacher import Teacher
-from consts import NUM_TRAIN_EPOCHS, ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR, TRAIN_IMAGE_DIR, STUDENT_TEACHER_LOOP, ORIGINAL_VAL_ANNOTATION_FILE, ORIGINAL_ANNOTATIONS_DIR, VAL_IMAGE_DIR
+from consts import NUM_TRAIN_EPOCHS, ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR, TRAIN_IMAGE_DIR, STUDENT_TEACHER_LOOP, ORIGINAL_VAL_ANNOTATION_FILE, ORIGINAL_ANNOTATIONS_DIR, VAL_IMAGE_DIR, OPENPIFPAF_PATH
 
 def main():
     initial_model_idx = 0
@@ -37,9 +37,8 @@ def main():
                               model_idx=model_idx,
                               num_train_epochs=NUM_TRAIN_EPOCHS,
                               train_image_dir=TRAIN_IMAGE_DIR,
-                              train_annotations=os.path.join(ANNOTATIONS_DIR,
-                                                             NEW_ANNOTATIONS_DIR,
-                                                             'annotations_file_model_idx_{model_idx}'.format(model_idx=model_idx)),
+                              train_annotations=os.path.join(OPENPIFPAF_PATH,
+                                                             'train_annotaions_of_model_no_{model_idx}'.format(model_idx=model_idx)),
                               val_image_dir=VAL_IMAGE_DIR,
                               val_annotations=os.path.join(ANNOTATIONS_DIR,
                                                            ORIGINAL_ANNOTATIONS_DIR,
