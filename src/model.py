@@ -1,17 +1,17 @@
 import os
 import logging
-from consts import TRAIN_COMMAND, EVAL_OTHER_COMMAND, OPENPIFPAF_PATH
+from consts import TRAIN_COMMAND, EVAL_OTHER_COMMAND, OPENPIFPAF_PATH, ANNOTATIONS_SCORE_THRESH
 
 class Model(object):
     def __init__(self, model_type, model_idx, num_train_epochs, train_image_dir, train_annotations, val_image_dir, val_annotations, next_gen_annotations):
         self._model_type = model_type
         self._model_idx = model_idx
-        self._model_output_file = 'model_type_{model_type}_model_no_{model_idx}'.format(model_idx=model_idx,
-                                                                                                     model_type=model_type)
-        self._eval_output_file = 'eval_of_val_dataset_model_type_{model_type}_model_no_{model_idx}'.format(model_idx=model_idx,
-                                                                                                            model_type=model_type)
-        self._new_data_eval_file = 'eval_of_new_dataset_model_type_{model_type}_model_no_{model_idx}'.format(model_idx=model_idx,
-                                                                                                            model_type=model_type)
+        self._model_output_file = 'model_type_{model_type}_model_no_{model_idx}'.format(model_idx=self._model_idx,
+                                                                                        model_type=self._model_type)
+        self._eval_output_file = 'eval_of_val_dataset_model_type_{model_type}_model_no_{model_idx}'.format(model_idx=self._model_idx,
+                                                                                                            model_type=self._model_type)
+        self._new_data_eval_file = 'eval_of_new_dataset_model_type_{model_type}_model_no_{model_idx}'.format(model_idx=self._model_idx,
+                                                                                                            model_type=self._model_type)
 
         self._num_train_epochs = num_train_epochs
         self._train_image_dir = train_image_dir
@@ -32,8 +32,7 @@ class Model(object):
 
     def create_val_score(self, metric='oks'):
         """
-        :param metric: Metric for evaluation of the model after training
-        :return: Average score for all of the training epochs
+        creates val score files for val data
         """
         if metric == 'oks':
             checkpoint = self._model_output_file
@@ -44,14 +43,31 @@ class Model(object):
                                                                             eval_output_file=self._eval_output_file))
             logging.info('eval_process_return_value:{}'.format(eval_process_return_value))
 
-    def select_new_images(self):
-        # TODO - select images from teacher predictions (using self._model_eval_file)
-        pass
+    def select_new_images(self, thresh=ANNOTATIONS_SCORE_THRESH):
+        new_annotations_data = json.loads(self._new_data_eval_file)
+        new_annotations_data_filtered_by_score = [ann for ann in new_annotations_data if ann['score'] >= thresh]
+        selected_ann_data = {'annotations': []}
+        for ann in new_annotations_data_filtered_by_score:
+            ann['num_keypoints'] = sum([1 for i in ann['keypoints'] if i > 0]) / 3
+            selected_ann_data['annotations'].append(ann)
+        self._selected_ann_data = selected_ann_data
+
+    def merge_annotations(self):
+        train_ann_data = json.loads(self._train_annotations)
+        for key, value in train_ann_data.iteritems():
+            selected_ann_value = self._selected_ann_data.get(key,None)
+            if selected_ann_value:
+                if isinstance(selected_ann_value, list):
+                    value.extend(selected_ann_value)
+                else :
+                    value.append(selected_ann_value)
+        merged_file_name = 'train_annotaions_of_model_no_{model_idx}'.format(model_idx=self._model_idx+1)
+        json.dump(merged_file_name, train_ann_data)
+        self._merged_annotations_path = merged_file_name
 
     def create_new_data_scores_and_annotations(self):
         """
-        :param metric: Metric for evaluation of the model after training
-        :return: Average score for all of the training epochs
+        Creates next gen annotations and merges them with train annotations
         """
         if os.path.exists(self._next_gen_annotations):
             eval_process_new_data_return_value = os.system(EVAL_OTHER_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
@@ -60,12 +76,13 @@ class Model(object):
                                                 dataset_annotations=self._next_gen_annotations,
                                                 eval_output_file=self._new_data_eval_file))
             logging.info('eval_process_new_data_return_value:{}'.format(eval_process_new_data_return_value))
+            select_new_images()
+            merge_annotations()
         else:
             logging.info('next_gen_annotations file does not exist')
 
-        # TODO create new annotations file
-
     def save_results(self):
+        # TODO
         eval_output_stats_file = self._eval_output_file + '.stats.json'
         new_data_eval_stats_file = self._new_data_eval_file + '.stats_json'
 
