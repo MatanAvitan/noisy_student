@@ -42,7 +42,7 @@ def main(args):
         if args.having_annotations:
             images = funcy.lremove(lambda i: i['id'] not in images_with_annotations, images)
 
-        x, y = train_test_split(images, train_size=args.split)
+        x, y = train_test_split(images, train_size=args.split, random_state=0)
 
         save_coco(args.train, info, licenses, x, filter_annotations(annotations, x), categories)
         save_coco(args.test, info, licenses, y, filter_annotations(annotations, y), categories)
