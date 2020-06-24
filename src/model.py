@@ -44,10 +44,14 @@ class Model(object):
             logging.info('eval_process_return_value:{}'.format(eval_process_return_value))
 
     def select_new_images(self, thresh=ANNOTATIONS_SCORE_THRESH):
+        logging.info('Loading new annotation file created by teacher')
         new_annotations_data = json.loads(self._new_data_eval_file)
+        logging.info('Filtering new annotation file')
         new_annotations_data_filtered_by_score = [ann for ann in new_annotations_data if ann['score'] >= thresh]
         selected_ann_data = {'annotations': []}
-        for ann in new_annotations_data_filtered_by_score:
+        total_new_annotations_filtered_count = len(new_annotations_data_filtered_by_score)
+        for idx, ann in enumerate(new_annotations_data_filtered_by_score):
+            logging.info('Adding annotation no.{} out of {}'.format(idx, total_new_annotations_filtered_count))
             ann['num_keypoints'] = sum([1 for i in ann['keypoints'] if i > 0]) / 3
             selected_ann_data['annotations'].append(ann)
         self._selected_ann_data = selected_ann_data
@@ -55,6 +59,7 @@ class Model(object):
     def merge_annotations(self):
         train_ann_data = json.loads(self._train_annotations)
         for key, value in train_ann_data.iteritems():
+            logging.info('merging key: {}'.format(key))
             selected_ann_value = self._selected_ann_data.get(key,None)
             if selected_ann_value:
                 if isinstance(selected_ann_value, list):
@@ -62,6 +67,7 @@ class Model(object):
                 else :
                     value.append(selected_ann_value)
         merged_file_name = 'train_annotaions_of_model_no_{model_idx}'.format(model_idx=self._model_idx+1)
+        logging.info('Dumping File: {}'.format(merged_file_name))
         json.dump(merged_file_name, train_ann_data)
         self._merged_annotations_path = merged_file_name
 
@@ -76,7 +82,9 @@ class Model(object):
                                                 dataset_annotations=self._next_gen_annotations,
                                                 eval_output_file=self._new_data_eval_file))
             logging.info('eval_process_new_data_return_value:{}'.format(eval_process_new_data_return_value))
+            logging.info('select new images')
             self.select_new_images()
+            logging.info('merging annotations')
             self.merge_annotations()
         else:
             logging.info('next_gen_annotations file does not exist')
