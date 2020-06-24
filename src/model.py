@@ -62,7 +62,7 @@ class Model(object):
     def merge_annotations(self):
         with open(os.path.join(OPENPIFPAF_PATH, self._train_annotations), 'r') as j:
             train_ann_data = json.loads(j.read())
-        for key, value in train_ann_data.iteritems():
+        for key, value in train_ann_data.items():
             logging.info('merging key: {}'.format(key))
             selected_ann_value = self._selected_ann_data.get(key,None)
             if selected_ann_value:
