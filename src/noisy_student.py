@@ -59,8 +59,9 @@ def main():
         teacher = new_student
         logging.info('Creating Validation Scores to Model no.{model_idx}'.format(model_idx=model_idx))
         teacher.create_val_score()
-        logging.info('Creating New data Scores and New Annotations to Model no.{model_idx}'.format(model_idx=model_idx))
-        teacher.create_new_data_scores_and_annotations()
+        if model_idx < STUDENT_TEACHER_LOOP-1:
+            logging.info('Creating New data Scores and New Annotations to Model no.{model_idx}'.format(model_idx=model_idx))
+            teacher.create_new_data_scores_and_annotations()
         #teacher.save_results()
 
 
