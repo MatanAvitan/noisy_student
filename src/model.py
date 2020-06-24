@@ -1,7 +1,7 @@
 import os
 import json
 import logging
-from consts import TRAIN_COMMAND, EVAL_OTHER_COMMAND, OPENPIFPAF_PATH, ANNOTATIONS_SCORE_THRESH
+from consts import TRAIN_COMMAND, EVAL_OTHER_COMMAND, OPENPIFPAF_PATH, ANNOTATIONS_SCORE_THRESH, OPENPIFPAF_PATH
 
 class Model(object):
     def __init__(self, model_type, model_idx, num_train_epochs, train_image_dir, train_annotations, val_image_dir, val_annotations, next_gen_annotations):
@@ -46,7 +46,7 @@ class Model(object):
 
     def select_new_images(self, thresh=ANNOTATIONS_SCORE_THRESH):
         logging.info('Loading new annotation file created by teacher')
-        new_data_eval_pred_file_path = self._new_data_eval_file + '.pred.json'
+        new_data_eval_pred_file_path = os.path.join(OPENPIFPAF_PATH, self._new_data_eval_file + '.pred.json')
         with open(new_data_eval_pred_file_path, 'r') as f:
             new_annotations_data = json.loads(j.read())
         logging.info('Filtering new annotation file')
@@ -60,7 +60,7 @@ class Model(object):
         self._selected_ann_data = selected_ann_data
 
     def merge_annotations(self):
-        with open(self._train_annotations, 'r') as f:
+        with open(os.path.join(OPENPIFPAF_PATH, self._train_annotations), 'r') as f:
             train_ann_data = json.loads(j.read())
         for key, value in train_ann_data.iteritems():
             logging.info('merging key: {}'.format(key))
