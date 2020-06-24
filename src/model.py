@@ -76,8 +76,8 @@ class Model(object):
                                                 dataset_annotations=self._next_gen_annotations,
                                                 eval_output_file=self._new_data_eval_file))
             logging.info('eval_process_new_data_return_value:{}'.format(eval_process_new_data_return_value))
-            select_new_images()
-            merge_annotations()
+            self.select_new_images()
+            self.merge_annotations()
         else:
             logging.info('next_gen_annotations file does not exist')
 
