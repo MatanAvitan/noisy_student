@@ -42,7 +42,6 @@ TRAIN_COMMAND = """cd {openpifpaf_path} && \
 EVAL_OTHER_COMMAND = """cd {openpifpaf_path} && \
                         python -m openpifpaf.eval_coco \
                             --checkpoint {model_output_file} \
-                            -n 500 \
                             --long-edge=641 \
                             --write-predictions \
                             --dataset other \
