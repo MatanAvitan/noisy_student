@@ -63,8 +63,9 @@ class Model(object):
                 mock_keypoints = ann['keypoints']
                 mock_num_keypoints = ann['num_keypoints']
         logging.info('Create new annotations dict from new annotations')
-        selected_ann_data = {'annotations': []}
+        selected_ann_data = {'annotations': [], 'images': []}
         total_new_annotations_filtered_count = len(new_annotations_data_filtered_by_score)
+        added_images_ids = []
         for idx, ann in enumerate(new_annotations_data_filtered_by_score):
             logging.info('Adding annotation no.{} out of {}'.format(idx, total_new_annotations_filtered_count))
             if MOCK_RUN and idx % 20 == 0:
@@ -75,6 +76,10 @@ class Model(object):
             ann['id'] = max_id + 1
             max_id += 1
             selected_ann_data['annotations'].append(ann)
+            # add image_id if not exists
+            if ann['image_id'] not in added_images_ids:
+                selected_ann_data['images'].append({'id': ann['image_id']})
+                added_images_ids.append(ann['image_id'])
         self._selected_ann_data = selected_ann_data
 
     def merge_annotations(self):
