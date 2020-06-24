@@ -1,4 +1,5 @@
 import os
+import json
 import logging
 from consts import TRAIN_COMMAND, EVAL_OTHER_COMMAND, OPENPIFPAF_PATH, ANNOTATIONS_SCORE_THRESH
 
