@@ -46,7 +46,9 @@ class Model(object):
 
     def select_new_images(self, thresh=ANNOTATIONS_SCORE_THRESH):
         logging.info('Loading new annotation file created by teacher')
-        new_annotations_data = json.loads(self._new_data_eval_file)
+        new_data_eval_pred_file_path = self._new_data_eval_file + '.pred.json'
+        with open(new_data_eval_pred_file_path, 'r') as f:
+            new_annotations_data = json.loads(j.read())
         logging.info('Filtering new annotation file')
         new_annotations_data_filtered_by_score = [ann for ann in new_annotations_data if ann['score'] >= thresh]
         selected_ann_data = {'annotations': []}
@@ -58,7 +60,8 @@ class Model(object):
         self._selected_ann_data = selected_ann_data
 
     def merge_annotations(self):
-        train_ann_data = json.loads(self._train_annotations)
+        with open(self._train_annotations, 'r') as f:
+            train_ann_data = json.loads(j.read())
         for key, value in train_ann_data.iteritems():
             logging.info('merging key: {}'.format(key))
             selected_ann_value = self._selected_ann_data.get(key,None)
