@@ -67,10 +67,10 @@ class Model(object):
         with open(next_gen_annotations_path, 'r') as j:
             next_gen_annotations_data = json.loads(j.read())
         file_names = {}
-        flicker_urls = {}
+        flickr_urls = {}
         for image in next_gen_annotations_data['images']:
-            file_names[image['id']] = image['file_name']
-            flicker_urls[image['id']] = image['flicker_url']
+            file_names[image['id']] = image.get('file_name')
+            flickr_urls[image['id']] = image.get('flickr_url')
         logging.info('Create new annotations dict from new annotations')
         selected_ann_data = {'annotations': [], 'images': []}
         total_new_annotations_filtered_count = len(new_annotations_data_filtered_by_score)
@@ -98,7 +98,7 @@ class Model(object):
             train_ann_data = json.loads(j.read())
         for key, value in train_ann_data.items():
             logging.info('merging key: {}'.format(key))
-            selected_ann_value = self._selected_ann_data.get(key,None)
+            selected_ann_value = self._selected_ann_data.get(key)
             if selected_ann_value:
                 if isinstance(selected_ann_value, list):
                     value.extend(selected_ann_value)
