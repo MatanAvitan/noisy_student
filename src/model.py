@@ -89,7 +89,7 @@ class Model(object):
             if ann['image_id'] not in added_images_ids:
                 selected_ann_data['images'].append({'id': ann['image_id'],
                                                     'file_name': file_names[ann['image_id']],
-                                                    'flicker_url': flicker_urls[ann['image_id']]})
+                                                    'flickr_url': flickr_urls[ann['image_id']]})
                 added_images_ids.append(ann['image_id'])
         self._selected_ann_data = selected_ann_data
 
