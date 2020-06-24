@@ -69,8 +69,8 @@ class Model(object):
         file_names = {}
         flicker_urls = {}
         for image in next_gen_annotations_data['images']:
-            file_names[image['image_id']] = image['file_name']
-            flicker_urls[image['image_id']] = image['flicker_url']
+            file_names[image['id']] = image['file_name']
+            flicker_urls[image['id']] = image['flicker_url']
         logging.info('Create new annotations dict from new annotations')
         selected_ann_data = {'annotations': [], 'images': []}
         total_new_annotations_filtered_count = len(new_annotations_data_filtered_by_score)
