@@ -49,13 +49,23 @@ class Model(object):
         new_data_eval_pred_file_path = os.path.join(OPENPIFPAF_PATH, self._new_data_eval_file + '.pred.json')
         with open(new_data_eval_pred_file_path, 'r') as j:
             new_annotations_data = json.loads(j.read())
-        logging.info('Filtering new annotation file')
+        logging.info('Filtering new annotation dict')
         new_annotations_data_filtered_by_score = [ann for ann in new_annotations_data if ann['score'] >= thresh]
+        logging.info('Loading train annotations')
+        with open(os.path.join(OPENPIFPAF_PATH, self._train_annotations), 'r') as j:
+            train_ann_data = json.loads(j.read())
+        logging.info('Find max_id in train annotations')
+        max_id = 0
+        for ann in train_ann_data['annotations']:
+            max_id = max(max_id, ann['id'])
+        logging.info('Create new annotations dict from new annotations')
         selected_ann_data = {'annotations': []}
         total_new_annotations_filtered_count = len(new_annotations_data_filtered_by_score)
         for idx, ann in enumerate(new_annotations_data_filtered_by_score):
             logging.info('Adding annotation no.{} out of {}'.format(idx, total_new_annotations_filtered_count))
             ann['num_keypoints'] = sum([1 for i in ann['keypoints'] if i > 0]) / 3
+            ann['id'] = max_id + 1
+            max_id += 1
             selected_ann_data['annotations'].append(ann)
         self._selected_ann_data = selected_ann_data
 
