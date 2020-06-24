@@ -1,7 +1,7 @@
 import os
 import json
 import logging
-from consts import TRAIN_COMMAND, EVAL_OTHER_COMMAND, OPENPIFPAF_PATH, ANNOTATIONS_SCORE_THRESH, OPENPIFPAF_PATH
+from consts import TRAIN_COMMAND, EVAL_OTHER_COMMAND, OPENPIFPAF_PATH, ANNOTATIONS_SCORE_THRESH, OPENPIFPAF_PATH, MOCK_RUN
 
 class Model(object):
     def __init__(self, model_type, model_idx, num_train_epochs, train_image_dir, train_annotations, val_image_dir, val_annotations, next_gen_annotations):
@@ -56,14 +56,22 @@ class Model(object):
             train_ann_data = json.loads(j.read())
         logging.info('Find max_id in train annotations')
         max_id = 0
-        for ann in train_ann_data['annotations']:
+        mock_num_keypoints = 0
+        for idx, ann in enumerate(train_ann_data['annotations']):
             max_id = max(max_id, ann['id'])
+            if MOCK_RUN and mock_num_keypoints == 0:
+                mock_keypoints = ann['keypoints']
+                mock_num_keypoints = ann['num_keypoints']
         logging.info('Create new annotations dict from new annotations')
         selected_ann_data = {'annotations': []}
         total_new_annotations_filtered_count = len(new_annotations_data_filtered_by_score)
         for idx, ann in enumerate(new_annotations_data_filtered_by_score):
             logging.info('Adding annotation no.{} out of {}'.format(idx, total_new_annotations_filtered_count))
-            ann['num_keypoints'] = sum([1 for i in ann['keypoints'] if i > 0]) / 3
+            if MOCK_RUN and idx % 20 == 0:
+                ann['num_keypoints'] = mock_num_keypoints
+                ann['keypoints'] = mock_keypoints
+            else:
+                ann['num_keypoints'] = sum([1 for i in ann['keypoints'] if i > 0]) / 3
             ann['id'] = max_id + 1
             max_id += 1
             selected_ann_data['annotations'].append(ann)
@@ -80,7 +88,7 @@ class Model(object):
                     value.extend(selected_ann_value)
                 else :
                     value.append(selected_ann_value)
-        merged_file_name = os.path.join(OPENPIFPAF_PATH, 'train_annotaions_of_model_no_{model_idx}'.format(model_idx=self._model_idx+1))
+        merged_[fil]e_name = os.path.join(OPENPIFPAF_PATH, 'train_annotaions_of_model_no_{model_idx}'.format(model_idx=self._model_idx+1))
         logging.info('Dumping File: {}'.format(merged_file_name))
         with open(merged_file_name, 'w') as outfile:
             json.dump(train_ann_data, outfile)
