@@ -72,7 +72,8 @@ class Model(object):
                     value.append(selected_ann_value)
         merged_file_name = 'train_annotaions_of_model_no_{model_idx}'.format(model_idx=self._model_idx+1)
         logging.info('Dumping File: {}'.format(merged_file_name))
-        json.dump(merged_file_name, train_ann_data)
+        with open(merged_file_name, 'w') as outfile:
+            json.dump(train_ann_data, outfile)
         self._merged_annotations_path = merged_file_name
 
     def create_new_data_scores_and_annotations(self):
