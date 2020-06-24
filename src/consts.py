@@ -34,6 +34,7 @@ TRAIN_COMMAND = """cd {openpifpaf_path} && \
                        --ema=0.01 \
                        --basenet=shufflenetv2k16w \
                        --headnets cif caf caf25 \
+                       --loader-workers 24 \
                        --coco-train-image-dir {train_image_dir} \
                        --cocokp-train-annotations {train_annotations} \
                        --coco-val-image-dir {val_image_dir} \
@@ -45,6 +46,7 @@ EVAL_OTHER_COMMAND = """cd {openpifpaf_path} && \
                             --checkpoint {model_output_file} \
                             --long-edge=641 \
                             --write-predictions \
+                            --loader-workers 24 \
                             --dataset other \
                             --dataset-image-dir {dataset_image_dir} \
                             --dataset-annotations {dataset_annotations} \
