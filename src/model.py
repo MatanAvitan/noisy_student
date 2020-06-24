@@ -84,6 +84,8 @@ class Model(object):
                 ann['num_keypoints'] = sum([1 for i in ann['keypoints'] if i > 0]) / 3
             ann['id'] = max_id + 1
             max_id += 1
+            # add key, value iscrowd, 0
+            ann['iscrowd'] = 0
             selected_ann_data['annotations'].append(ann)
             # add image_id if not exists
             if ann['image_id'] not in added_images_ids:
