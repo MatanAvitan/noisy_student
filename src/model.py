@@ -88,7 +88,7 @@ class Model(object):
                     value.extend(selected_ann_value)
                 else :
                     value.append(selected_ann_value)
-        merged_[fil]e_name = os.path.join(OPENPIFPAF_PATH, 'train_annotaions_of_model_no_{model_idx}'.format(model_idx=self._model_idx+1))
+        merged_file_name = os.path.join(OPENPIFPAF_PATH, 'train_annotaions_of_model_no_{model_idx}'.format(model_idx=self._model_idx+1))
         logging.info('Dumping File: {}'.format(merged_file_name))
         with open(merged_file_name, 'w') as outfile:
             json.dump(train_ann_data, outfile)
