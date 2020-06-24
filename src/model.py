@@ -62,6 +62,15 @@ class Model(object):
             if MOCK_RUN and mock_num_keypoints == 0:
                 mock_keypoints = ann['keypoints']
                 mock_num_keypoints = ann['num_keypoints']
+        logging.info('Load original next gen annotations file for additional info')
+        next_gen_annotations_path = os.path.join(OPENPIFPAF_PATH, self._next_gen_annotations)
+        with open(next_gen_annotations_path, 'r') as j:
+            next_gen_annotations_data = json.loads(j.read())
+        file_names = {}
+        flicker_urls = {}
+        for image in next_gen_annotations_data['images']:
+            file_names[image['image_id']] = image['file_name']
+            flicker_urls[image['image_id']] = image['flicker_url']
         logging.info('Create new annotations dict from new annotations')
         selected_ann_data = {'annotations': [], 'images': []}
         total_new_annotations_filtered_count = len(new_annotations_data_filtered_by_score)
@@ -78,7 +87,9 @@ class Model(object):
             selected_ann_data['annotations'].append(ann)
             # add image_id if not exists
             if ann['image_id'] not in added_images_ids:
-                selected_ann_data['images'].append({'id': ann['image_id']})
+                selected_ann_data['images'].append({'id': ann['image_id'],
+                                                    'file_name': file_names[ann['image_id']],
+                                                    'flicker_url': flicker_urls[ann['image_id']]})
                 added_images_ids.append(ann['image_id'])
         self._selected_ann_data = selected_ann_data
 
