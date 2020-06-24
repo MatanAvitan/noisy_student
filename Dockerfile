@@ -75,10 +75,13 @@ COPY src/cocosplit.py /noisy_student/src
 COPY src/__init__.py /noisy_student/src
 
 # copy consts
-COPY src/consts.py /noisy_student/src/consts.py
+COPY src/data_consts.py /noisy_student/src/consts.py
 
 # split data annotations
 RUN python /noisy_student/src/data_splitter.py
+
+# remove src/consts.py file
+RUN rm src/consts.py
 
 # mkdir OUTPUT_DIR
 RUN mkdir $OUTPUT_DIR
