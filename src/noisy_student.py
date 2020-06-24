@@ -5,7 +5,7 @@ from teacher import Teacher
 from consts import NUM_TRAIN_EPOCHS, ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR, TRAIN_IMAGE_DIR, STUDENT_TEACHER_LOOP, ORIGINAL_VAL_ANNOTATION_FILE, ORIGINAL_ANNOTATIONS_DIR, VAL_IMAGE_DIR, OPENPIFPAF_PATH
 
 logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
-                    level=logging.INFO,
+                    level=logging.DEBUG,
                     datefmt='%Y-%m-%d %H:%M:%S')
 
 def main():
