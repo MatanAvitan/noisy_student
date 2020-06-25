@@ -111,6 +111,7 @@ ENV VAL_IMAGE_DIR="/noisy_student/src/data-mscoco/images/val2017"
 RUN cd /noisy_student/src && git clone --single-branch --branch noisy-student https://github.com/atalyaalon/openpifpaf.git
 
 # Add AWS Credentials file
+RUN mkdir ~/.aws
 COPY $AWS_CREDENTIALS_FILE_PATH ~/.aws/credentials
 
 # run noisy student
