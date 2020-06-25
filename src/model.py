@@ -2,11 +2,10 @@ import os
 import json
 import logging
 import boto3
+from data_consts import OPENPIFPAF_PATH
 from consts import (TRAIN_COMMAND,
                     EVAL_COMMAND,
-                    OPENPIFPAF_PATH,
                     ANNOTATIONS_SCORE_THRESH,
-                    OPENPIFPAF_PATH,
                     MOCK_RUN,
                     S3_BUCKET_NAME,
                     S3_REGION)
