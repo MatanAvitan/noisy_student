@@ -30,19 +30,20 @@ def create_results_dir_in_s3(experiment_name):
 
 def create_full_data_model_for_comparison(model_idx):
     full_data_model = Teacher(model_type='openpifpaf',
-                      model_idx=model_idx,
-                      num_train_epochs=NUM_TRAIN_EPOCHS,
-                      train_image_dir=TRAIN_IMAGE_DIR,
-                      train_annotations=os.path.join(ANNOTATIONS_DIR,
-                                                     ORIGINAL_ANNOTATIONS_DIR,
-                                                     ORIGINAL_TRAIN_ANNOTATION_FILE),
-                      val_image_dir=VAL_IMAGE_DIR,
-                      val_annotations=os.path.join(ANNOTATIONS_DIR,
-                                                   ORIGINAL_ANNOTATIONS_DIR,
-                                                   ORIGINAL_VAL_ANNOTATION_FILE),
-                      next_gen_annotations=os.path.join(ANNOTATIONS_DIR,
-                                                        NEW_ANNOTATIONS_DIR,
-                                                        'annotations_file_model_idx_{model_idx}'.format(model_idx=initial_model_idx+1)))
+                              model_idx=model_idx,
+                              num_train_epochs=NUM_TRAIN_EPOCHS,
+                              train_image_dir=TRAIN_IMAGE_DIR,
+                              train_annotations=os.path.join(ANNOTATIONS_DIR,
+                                                             ORIGINAL_ANNOTATIONS_DIR,
+                                                             ORIGINAL_TRAIN_ANNOTATION_FILE),
+                              val_image_dir=VAL_IMAGE_DIR,
+                              val_annotations=os.path.join(ANNOTATIONS_DIR,
+                                                           ORIGINAL_ANNOTATIONS_DIR,
+                                                           ORIGINAL_VAL_ANNOTATION_FILE),
+                              next_gen_annotations=os.path.join(ANNOTATIONS_DIR,
+                                                                NEW_ANNOTATIONS_DIR,
+                                                                'annotations_file_model_idx_{model_idx}'.format(model_idx=initial_model_idx+1)),
+                              full_data_model=True)
     return full_data_model
 
 def main():
@@ -74,6 +75,7 @@ def main():
     teacher.create_new_data_scores_and_annotations()
     teacher.save_results(experiment_name=EXPERIMENT_NAME)
     teacher.save_logs(experiment_name=EXPERIMENT_NAME)
+    teacher.save_model(experiment_name=EXPERIMENT_NAME)
 
     for model_idx in range(initial_model_idx+1, STUDENT_TEACHER_LOOP):
         last_model_in_loop = model_idx == STUDENT_TEACHER_LOOP-1
@@ -108,12 +110,14 @@ def main():
             teacher.create_new_data_scores_and_annotations()
         teacher.save_results(experiment_name=EXPERIMENT_NAME)
         teacher.save_logs(experiment_name=EXPERIMENT_NAME)
+        teacher.save_model(experiment_name=EXPERIMENT_NAME)
 
     full_data_model = create_full_data_model_for_comparison(model_idx+1)
     full_data_model.fit()
     teacher.create_val_score()
     teacher.save_results(experiment_name=EXPERIMENT_NAME)
     teacher.save_logs(experiment_name=EXPERIMENT_NAME)
+    teacher.save_model(experiment_name=EXPERIMENT_NAME)
 
 if __name__ == '__main__':
     main()

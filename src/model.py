@@ -13,15 +13,19 @@ from consts import (TRAIN_COMMAND,
 
 
 class Model(object):
-    def __init__(self, model_type, model_idx, num_train_epochs, train_image_dir, train_annotations, val_image_dir, val_annotations, next_gen_annotations):
+    def __init__(self, model_type, model_idx, num_train_epochs, train_image_dir, train_annotations, val_image_dir, val_annotations, next_gen_annotations, full_data_model=False):
         self._model_type = model_type
         self._model_idx = model_idx
+        if full_data_model:
+            model_output_file_suffix = '_full_training_data'
+        else:
+            model_output_file_suffix + ''
         self._model_output_file = 'model_type_{model_type}_model_no_{model_idx}'.format(model_idx=self._model_idx,
-                                                                                        model_type=self._model_type)
+                                                                                        model_type=self._model_type) + model_output_file_suffix
         self._eval_output_file = 'eval_of_val_dataset_model_type_{model_type}_model_no_{model_idx}'.format(model_idx=self._model_idx,
-                                                                                                            model_type=self._model_type)
+                                                                                                            model_type=self._model_type) + model_output_file_suffix
         self._new_data_eval_file = 'eval_of_new_dataset_model_type_{model_type}_model_no_{model_idx}'.format(model_idx=self._model_idx,
-                                                                                                            model_type=self._model_type)
+                                                                                                            model_type=self._model_type) + model_output_file_suffix
 
         self._num_train_epochs = num_train_epochs
         self._train_image_dir = train_image_dir
@@ -155,7 +159,7 @@ class Model(object):
                             aws_secret_access_key=AWS_ACCESS_KEY)
         for filename, filepath in files:
             if os.path.exists(filepath):
-                logging.info('Uploading to Bucket {bucket_name}, Experiment {experiment_name}, filename {filename}'.format(bucket_name=S3_BUCKET_NAME,
+                logging.info('Uploading to Bucket {bucket_name}, Experiment {experiment_name}, Filename {filename}'.format(bucket_name=S3_BUCKET_NAME,
                                                                                                                            experiment_name=experiment_name,
                                                                                                                            filename=filename))
                 s3.meta.client.upload_file(filepath, S3_BUCKET_NAME, os.path.join(experiment_name,filename))
@@ -169,6 +173,18 @@ class Model(object):
                             aws_access_key_id=AWS_ACCESS_ID,
                             aws_secret_access_key=AWS_ACCESS_KEY)
         if os.path.exists(filepath):
-            logging.info('Uploading to Bucket {} Experiment {} filename {}'.format(S3_BUCKET_NAME, experiment_name, filename))
+            logging.info('Uploading to Bucket {}, Experiment {}, Filename {}'.format(S3_BUCKET_NAME, experiment_name, filename))
             s3.meta.client.upload_file(filepath, S3_BUCKET_NAME, os.path.join(experiment_name,filename))
         logging.info('Finished Saving Logs of Model {model_idx} in S3'.format(model_idx=self._model_idx))
+
+    def save_model(self, experiment_name):
+        logging.info('Starting Saving Model {model_idx} in S3'.format(model_idx=self._model_idx))
+        filename = self._model_output_file
+        filepath = os.path.join(OPENPIFPAF_PATH, filename)
+        s3 = boto3.resource('s3',
+                            aws_access_key_id=AWS_ACCESS_ID,
+                            aws_secret_access_key=AWS_ACCESS_KEY)
+        if os.path.exists(filepath):
+            logging.info('Uploading to Bucket {}, Experiment {}, Filename {}'.format(S3_BUCKET_NAME, experiment_name, filename))
+            s3.meta.client.upload_file(filepath, S3_BUCKET_NAME, os.path.join(experiment_name,filename))
+        logging.info('Finished Saving Model {model_idx} in S3'.format(model_idx=self._model_idx))
