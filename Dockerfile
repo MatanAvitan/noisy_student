@@ -106,6 +106,7 @@ RUN rmdir /noisy_student/src_code/
 ENV OPENPIFPAF_PATH="/noisy_student/src/openpifpaf"
 ENV TRAIN_IMAGE_DIR="/noisy_student/src/data-mscoco/images/train2017"
 ENV VAL_IMAGE_DIR="/noisy_student/src/data-mscoco/images/val2017"
+ENV AWS_CREDENTIALS_FILE_PATH=$AWS_CREDENTIALS_FILE_PATH
 
 # create openpifpaf directory
 RUN cd /noisy_student/src && git clone --single-branch --branch noisy-student https://github.com/atalyaalon/openpifpaf.git
