@@ -37,8 +37,8 @@ def create_results_dir_in_s3(experiment_name):
                       aws_access_key_id=AWS_ACCESS_ID,
                       aws_secret_access_key=AWS_ACCESS_KEY)
     bucket_name = S3_BUCKET_NAME
-    directory_name = experiment_name
-    s3.put_object(Bucket=bucket_name, Key=(directory_name+'/'))
+    directory_name = experiment_name + '/'
+    s3.put_object(Bucket=bucket_name, Key=directory_name, Body='')
 
 def create_full_data_model_for_comparison(model_idx):
     full_data_model = Teacher(model_type='openpifpaf',
