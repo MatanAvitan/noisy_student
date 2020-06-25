@@ -89,4 +89,4 @@ and run inside docker:
 `sudo docker container rm $(sudo docker container ls -aq)`
 
 17. To pull code from git, clear containers, build noisy student and run noisy student:
-`git pull && sudo docker container rm $(sudo docker container ls -aq) && sudo docker-compose build && <your docker run command - see sections 12 and 13>`
+`git pull && sudo docker container rm $(sudo docker container ls -aq) && sudo docker-compose build --build-arg AWS_CREDENTIALS_FILE_PATH=<your aws credentials file path> && <your docker run command - see sections 12 and 13>`
