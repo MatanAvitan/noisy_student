@@ -164,7 +164,7 @@ class Model(object):
     def save_logs(self, experiment_name):
         logging.info('Starting Saving Logs of Model {model_idx} in S3'.format(model_idx=self._model_idx))
         filename = self._model_output_file + '.log'
-        filepath = os.path.join(OPENPIFPAF_PATH, logs_filename)
+        filepath = os.path.join(OPENPIFPAF_PATH, filename)
         s3 = boto3.resource('s3',
                             aws_access_key_id=AWS_ACCESS_ID,
                             aws_secret_access_key=AWS_ACCESS_KEY)
