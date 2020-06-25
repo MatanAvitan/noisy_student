@@ -1,7 +1,6 @@
 import os
 import logging
 import boto3
-from botocore.config import Config
 from student import Student
 from teacher import Teacher
 from consts import (NUM_TRAIN_EPOCHS,
@@ -22,18 +21,8 @@ logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
                     level=logging.DEBUG,
                     datefmt='%Y-%m-%d %H:%M:%S')
 
-s3_config = Config(
-    region_name = S3_REGION,
-    signature_version = 'v4',
-    retries = {
-        'max_attempts': 10,
-        'mode': 'standard'
-    }
-)
-
 def create_results_dir_in_s3(experiment_name):
     s3 = boto3.client('s3',
-                      config=s3_config,
                       aws_access_key_id=AWS_ACCESS_ID,
                       aws_secret_access_key=AWS_ACCESS_KEY)
     bucket_name = S3_BUCKET_NAME

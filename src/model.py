@@ -11,16 +11,6 @@ from consts import (TRAIN_COMMAND,
                     S3_REGION,
                     AWS_ACCESS_ID,
                     AWS_ACCESS_KEY)
-from botocore.config import Config
-
-s3_config = Config(
-    region_name = S3_REGION,
-    signature_version = 'v4',
-    retries = {
-        'max_attempts': 10,
-        'mode': 'standard'
-    }
-)
 
 
 class Model(object):
@@ -161,7 +151,6 @@ class Model(object):
 
         files = [(eval_output_stats_file_name, eval_output_stats_file_path), (new_data_eval_stats_file_name, new_data_eval_stats_file_path)]
         s3 = boto3.resource('s3',
-                            config=s3_config,
                             aws_access_key_id=AWS_ACCESS_ID,
                             aws_secret_access_key=AWS_ACCESS_KEY)
         for filename, filepath in files:
@@ -175,7 +164,6 @@ class Model(object):
         filename = self._model_output_file + '.log'
         filepath = os.path.join(OPENPIFPAF_PATH, logs_filename)
         s3 = boto3.resource('s3',
-                            config=s3_config,
                             aws_access_key_id=AWS_ACCESS_ID,
                             aws_secret_access_key=AWS_ACCESS_KEY)
         if os.path.exists(filepath):

@@ -23,4 +23,3 @@ pycocotools-fix
 tensorboard
 six==1.12.0
 boto3
-botocore
