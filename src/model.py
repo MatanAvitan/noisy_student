@@ -48,7 +48,7 @@ class Model(object):
                                                                     val_image_dir=self._val_image_dir,
                                                                     val_annotations=self._val_annotations,
                                                                     model_output_file=self._model_output_file))
-        logging.info('train_process_return_value:{}'.format(train_process_return_value))
+        logging.info('train_process_return_value:{return_value}'.format(return_value=train_process_return_value))
 
     def create_val_score(self, metric='oks'):
         """
@@ -61,7 +61,7 @@ class Model(object):
                                                                             dataset_image_dir=self._val_image_dir,
                                                                             dataset_annotations=self._val_annotations,
                                                                             eval_output_file=self._eval_output_file))
-            logging.info('eval_process_return_value:{}'.format(eval_process_return_value))
+            logging.info('eval_process_return_value:{return_value}'.format(return_value=eval_process_return_value))
 
     def select_new_images(self, thresh=ANNOTATIONS_SCORE_THRESH):
         logging.info('Loading new annotation file created by teacher')
@@ -96,7 +96,8 @@ class Model(object):
         total_new_annotations_filtered_count = len(new_annotations_data_filtered_by_score)
         added_images_ids = []
         for idx, ann in enumerate(new_annotations_data_filtered_by_score):
-            logging.info('Adding annotation no.{} out of {}'.format(idx, total_new_annotations_filtered_count))
+            logging.info('Adding annotation no.{idx} out of {total}'.format(idx=idx+1,
+                                                                            total=total_new_annotations_filtered_count))
             if MOCK_RUN and idx % 20 == 0:
                 ann['num_keypoints'] = mock_num_keypoints
                 ann['keypoints'] = mock_keypoints
@@ -119,7 +120,7 @@ class Model(object):
         with open(os.path.join(OPENPIFPAF_PATH, self._train_annotations), 'r') as j:
             train_ann_data = json.loads(j.read())
         for key, value in train_ann_data.items():
-            logging.info('merging key: {}'.format(key))
+            logging.info('merging key: {key}'.format(key=key))
             selected_ann_value = self._selected_ann_data.get(key)
             if selected_ann_value:
                 if isinstance(selected_ann_value, list):
@@ -127,7 +128,7 @@ class Model(object):
                 else :
                     value.append(selected_ann_value)
         merged_file_name = os.path.join(OPENPIFPAF_PATH, 'train_annotaions_of_model_no_{model_idx}'.format(model_idx=self._model_idx+1))
-        logging.info('Dumping File: {}'.format(merged_file_name))
+        logging.info('Dumping File: {merged_file_name}'.format(merged_file_name=merged_file_name))
         with open(merged_file_name, 'w') as outfile:
             json.dump(train_ann_data, outfile)
         self._merged_annotations_path = merged_file_name
@@ -142,7 +143,7 @@ class Model(object):
                                                 dataset_image_dir=self._train_image_dir,
                                                 dataset_annotations=self._next_gen_annotations,
                                                 eval_output_file=self._new_data_eval_file))
-            logging.info('eval_process_new_data_return_value:{}'.format(eval_process_new_data_return_value))
+            logging.info('eval_process_new_data_return_value:{return_value}'.format(return_value=eval_process_new_data_return_value))
             logging.info('select new images')
             self.select_new_images()
             logging.info('merging annotations')
@@ -161,8 +162,10 @@ class Model(object):
         s3 = boto3.resource('s3', config=s3_config)
         for filename, filepath in files:
             if os.path.exists(filepath):
-                logging.info('Uploading to Bucket {} Experiment {} filename {}'.format(S3_BUCKET_NAME, experiment_name, filename))
-                s3.meta.client.upload_file(filepath, S3_BUCKET_NAME, experiment_name '{}/{}'.format(experiment_name, filename))
+                logging.info('Uploading to Bucket {bucket_name}, Experiment {experiment_name}, filename {filename}'.format(bucket_name=S3_BUCKET_NAME,
+                                                                                                                           experiment_name=experiment_name,
+                                                                                                                           filename=filename))
+                s3.meta.client.upload_file(filepath, S3_BUCKET_NAME, os.path.join(experiment_name,filename))
 
     def save_logs(self, experiment_name):
         filename = self._model_output_file + '.log'
@@ -170,4 +173,4 @@ class Model(object):
         s3 = boto3.resource('s3', config=s3_config)
         if os.path.exists(filepath):
             logging.info('Uploading to Bucket {} Experiment {} filename {}'.format(S3_BUCKET_NAME, experiment_name, filename))
-            s3.meta.client.upload_file(filepath, S3_BUCKET_NAME, experiment_name '{}/{}'.format(experiment_name, filename))
+            s3.meta.client.upload_file(filepath, S3_BUCKET_NAME, os.path.join(experiment_name,filename))

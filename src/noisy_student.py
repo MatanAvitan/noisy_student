@@ -71,7 +71,7 @@ def main():
                                                         'annotations_file_model_idx_{model_idx}'.format(model_idx=initial_model_idx+1)))
 
     logging.info('********************************************************************')
-    logging.info('*************************   Model No {}.    *************************'.format(initial_model_idx))
+    logging.info('*************************   Model No {model_idx}.    *************************'.format(model_idx=initial_model_idx))
     logging.info('********************************************************************')
     logging.info('Fitting Model no.{model_idx}'.format(model_idx=initial_model_idx))
     teacher.fit()
@@ -103,7 +103,7 @@ def main():
                               next_gen_annotations=curr_next_gen_annotations)
 
         logging.info('********************************************************************')
-        logging.info('*************************   Model No {}.    *************************'.format(model_idx))
+        logging.info('*************************   Model No {model_idx}.    *************************'.format(model_idx=model_idx))
         logging.info('********************************************************************')
         logging.info('Fitting Model no.{model_idx}'.format(model_idx=model_idx))
         new_student.fit()
