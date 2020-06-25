@@ -16,7 +16,10 @@ from data_consts import (STUDENT_TEACHER_LOOP,
                          ORIGINAL_VAL_ANNOTATION_FILE,
                          ORIGINAL_TRAIN_ANNOTATION_FILE,
                          VAL_IMAGE_DIR,
-                         OPENPIFPAF_PATH)
+                         OPENPIFPAF_PATH,
+                         NEW_ANNOTATIONS_FILE_PREFIX,
+                         MERGED_TRAIN_ANNOTATIONS_FILE_PREFIX)
+
 logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
                     level=logging.DEBUG,
                     datefmt='%Y-%m-%d %H:%M:%S')
@@ -41,9 +44,7 @@ def create_full_data_model_for_comparison(model_idx):
                               val_annotations=os.path.join(ANNOTATIONS_DIR,
                                                            ORIGINAL_ANNOTATIONS_DIR,
                                                            ORIGINAL_VAL_ANNOTATION_FILE),
-                              next_gen_annotations=os.path.join(ANNOTATIONS_DIR,
-                                                                NEW_ANNOTATIONS_DIR,
-                                                                'annotations_file_model_idx_{model_idx}'.format(model_idx=initial_model_idx+1)),
+                              next_gen_annotations=None,
                               full_data_model=True)
     return full_data_model
 
@@ -56,14 +57,16 @@ def main():
                       train_image_dir=TRAIN_IMAGE_DIR,
                       train_annotations=os.path.join(ANNOTATIONS_DIR,
                                                      NEW_ANNOTATIONS_DIR,
-                                                     'annotations_file_model_idx_{model_idx}'.format(model_idx=initial_model_idx)),
+                                                     '{prefix}_{model_idx}'.format(prefix=NEW_ANNOTATIONS_FILE_PREFIX,
+                                                                                   model_idx=initial_model_idx)),
                       val_image_dir=VAL_IMAGE_DIR,
                       val_annotations=os.path.join(ANNOTATIONS_DIR,
                                                    ORIGINAL_ANNOTATIONS_DIR,
                                                    ORIGINAL_VAL_ANNOTATION_FILE),
                       next_gen_annotations=os.path.join(ANNOTATIONS_DIR,
                                                         NEW_ANNOTATIONS_DIR,
-                                                        'annotations_file_model_idx_{model_idx}'.format(model_idx=initial_model_idx+1)))
+                                                        '{prefix}_{model_idx}'.format(prefix=NEW_ANNOTATIONS_FILE_PREFIX,
+                                                                                      model_idx=initial_model_idx+1)))
 
     logging.info('********************************************************************')
     logging.info('*************************   Model No {model_idx}.    *************************'.format(model_idx=initial_model_idx))
@@ -83,7 +86,8 @@ def main():
         if not last_model_in_loop:
             curr_next_gen_annotations = os.path.join(ANNOTATIONS_DIR,
                                                      NEW_ANNOTATIONS_DIR,
-                                                     'annotations_file_model_idx_{model_idx}'.format(model_idx=model_idx+1))
+                                                     '{prefix}_{model_idx}'.format(prefix=NEW_ANNOTATIONS_FILE_PREFIX,
+                                                                                   model_idx=model_idx+1))
         else:
             curr_next_gen_annotations = None
         new_student = Student(model_type='openpifpaf',
@@ -91,7 +95,8 @@ def main():
                               num_train_epochs=NUM_TRAIN_EPOCHS,
                               train_image_dir=TRAIN_IMAGE_DIR,
                               train_annotations=os.path.join(OPENPIFPAF_PATH,
-                                                             'train_annotaions_of_model_no_{model_idx}'.format(model_idx=model_idx)),
+                                                             '{prefix}_{model_idx}'.format(prefix=MERGED_TRAIN_ANNOTATIONS_FILE_PREFIX,
+                                                                                           model_idx=model_idx)),
                               val_image_dir=VAL_IMAGE_DIR,
                               val_annotations=os.path.join(ANNOTATIONS_DIR,
                                                            ORIGINAL_ANNOTATIONS_DIR,

@@ -2,7 +2,7 @@ import os
 import json
 import logging
 import boto3
-from data_consts import OPENPIFPAF_PATH
+from data_consts import OPENPIFPAF_PATH, MERGED_TRAIN_ANNOTATIONS_FILE_PREFIX
 from consts import (TRAIN_COMMAND,
                     EVAL_COMMAND,
                     ANNOTATIONS_SCORE_THRESH,
@@ -121,7 +121,8 @@ class Model(object):
                     value.extend(selected_ann_value)
                 else :
                     value.append(selected_ann_value)
-        merged_file_name = os.path.join(OPENPIFPAF_PATH, 'train_annotaions_of_model_no_{model_idx}'.format(model_idx=self._model_idx+1))
+        merged_file_name = os.path.join(OPENPIFPAF_PATH, '{prefix}_{model_idx}'.format(prefix=MERGED_TRAIN_ANNOTATIONS_FILE_PREFIX,
+                                                                                       model_idx=self._model_idx+1))
         logging.info('Dumping File: {merged_file_name}'.format(merged_file_name=merged_file_name))
         with open(merged_file_name, 'w') as outfile:
             json.dump(train_ann_data, outfile)

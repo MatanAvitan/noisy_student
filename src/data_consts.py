@@ -13,3 +13,5 @@ VAL_IMAGE_DIR = os.getenv('VAL_IMAGE_DIR')
 OUTPUT_DIR = os.getenv('OUTPUT_DIR')
 EVAL_DIR = os.getenv('EVAL_DIR')
 OPENPIFPAF_PATH = os.getenv('OPENPIFPAF_PATH')
+NEW_ANNOTATIONS_FILE_PREFIX = 'annotations_file_model_idx'
+MERGED_TRAIN_ANNOTATIONS_FILE_PREFIX = 'train_annotaions_of_model_no'
