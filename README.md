@@ -41,15 +41,38 @@ If not, try to reboot the machine using the reboot command:
 8. cd to the noisy_student directory:
 `cd noisy_student`
 
-9. Build the docker file:
-`sudo docker-compose build`
+9. Create your AWS Credentials file - copy it to your instance (for example, using scp).
 
-10. Run the docker file:
-`sudo docker run --gpus all --shm-size=100gb --name noisystudent bestteam/noisystudent:latest`
+10. Build the docker file:
+`sudo docker-compose build --build-arg AWS_CREDENTIALS_FILE_PATH=<your aws credentials file path>`
 
-Note: we did not use docker-compose in this stage since docker compose does not suppor NVIDIA GPUs yet - see https://github.com/docker/compose/issues/6691
+11. Create an S3 bucket for results, add the aws config file or credentials file to your env (see configuration guide [here](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html#guide-configuration)) - these two are needed to run the algorithm.
 
-11. To find the trained models or logs in the docker - start the noisystudent container, and check the outputs directory:
+12. Run the docker file:
+`sudo docker run --gpus all \
+                 --shm-size=100gb \
+                 --name noisystudent \
+                 --env MOCK_RUN=0 \
+                 --env NUM_TRAIN_EPOCHS=150 \
+                 --env ANNOTATIONS_SCORE_THRESH=0.6 \
+                 --env S3_REGION=<your_region> \
+                 --env S3_BUCKET_NAME=<your bucket name> \
+                 --env EXPERIMENT_NAME=<your experiment name> \
+                bestteam/noisystudent:latest`
+
+Note: we did not use docker-compose in this stage since docker compose does not suppor NVIDIA GPUs yet - see [the following issue](https://github.com/docker/compose/issues/6691)
+
+13. For Mock-Run use the following command:
+`sudo docker run --gpus all \
+                 --shm-size=100gb \
+                 --name noisystudent \
+                 --env MOCK_RUN=1 \
+                 --env S3_REGION=<your_region> \
+                 --env S3_BUCKET_NAME=<your bucket name> \
+                 --env EXPERIMENT_NAME=<your experiment name> \
+                 bestteam/noisystudent:latest`
+
+14. To find the trained models or logs in the docker - start the noisystudent container, and check the outputs directory:
 ```sh
 sudo docker start noisystudent
 sudo docker exec -it noisystudent bash
@@ -59,11 +82,11 @@ and run inside docker:
 
 (To exit the container use ctrl-D)
 
-12. To stop the noisystudent container run:
+15. To stop the noisystudent container run:
 `sudo docker stop noisystudent`
 
-13. To clear the containers run:
+16. To clear the containers run:
 `sudo docker container rm $(sudo docker container ls -aq)`
 
-14. To pull code from git, clear containers, build noisy student and run noisy student:
-`git pull && sudo docker container rm $(sudo docker container ls -aq) && sudo docker-compose build && sudo docker run --gpus all --shm-size=100gb --name noisystudent bestteam/noisystudent:latest`
+17. To pull code from git, clear containers, build noisy student and run noisy student:
+`git pull && sudo docker container rm $(sudo docker container ls -aq) && sudo docker-compose build && <your docker run command - see sections 12 and 13>`

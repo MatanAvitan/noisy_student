@@ -1,20 +1,16 @@
 import os
 
-MOCK_RUN = False
-STUDENT_TEACHER_LOOP = 3
-NUM_TRAIN_EPOCHS = 50
-ANNOTATIONS_SCORE_THRESH = 0.7
-COCOSPLIT_PATH = os.getenv("COCOSPLIT_PATH")
-ANNOTATIONS_DIR = os.getenv('ANNOTATIONS_DIR')
-NEW_ANNOTATIONS_DIR = os.getenv('NEW_ANNOTATIONS_DIR')
-ORIGINAL_ANNOTATIONS_DIR = os.getenv('ORIGINAL_ANNOTATIONS_DIR')
-ORIGINAL_TRAIN_ANNOTATION_FILE = os.getenv('ORIGINAL_TRAIN_ANNOTATION_FILE')
-ORIGINAL_VAL_ANNOTATION_FILE = os.getenv('ORIGINAL_VAL_ANNOTATION_FILE')
-TRAIN_IMAGE_DIR = os.getenv('TRAIN_IMAGE_DIR')
-VAL_IMAGE_DIR = os.getenv('VAL_IMAGE_DIR')
-OUTPUT_DIR = os.getenv('OUTPUT_DIR')
-EVAL_DIR = os.getenv('EVAL_DIR')
-OPENPIFPAF_PATH = os.getenv('OPENPIFPAF_PATH')
+MOCK_RUN = bool(os.getenv("MOCK_RUN"))
+if MOCK_RUN:
+    NUM_TRAIN_EPOCHS = 1
+    ANNOTATIONS_SCORE_THRESH = 0
+else:
+    NUM_TRAIN_EPOCHS = os.getenv("NUM_TRAIN_EPOCHS")
+    ANNOTATIONS_SCORE_THRESH = os.getenv("ANNOTATIONS_SCORE_THRESH")
+
+S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME")
+S3_REGION = os.getenv("S3_REGION")
+EXPERIMENT_NAME = os.getenv("EXPERIMENT_NAME")
 
 TRAIN_COMMAND = """cd {openpifpaf_path} && \
                    python -m openpifpaf.train \
@@ -41,12 +37,14 @@ TRAIN_COMMAND = """cd {openpifpaf_path} && \
                        --cocokp-val-annotations {val_annotations} \
                        --output={model_output_file}"""
 
-EVAL_OTHER_COMMAND = """cd {openpifpaf_path} && \
+EVAL_COMMAND = """cd {openpifpaf_path} && \
                         python -m openpifpaf.eval_coco \
                             --checkpoint {model_output_file} \
                             --long-edge=641 \
                             --write-predictions \
-                            --loader-workers 24 \
+                            --loader-workers 16 \
+                            --decoder-workers 16 \
+                            --batch-size 16 \
                             --dataset other \
                             --dataset-image-dir {dataset_image_dir} \
                             --dataset-annotations {dataset_annotations} \

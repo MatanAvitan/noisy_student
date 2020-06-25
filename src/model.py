@@ -1,7 +1,26 @@
 import os
 import json
 import logging
-from consts import TRAIN_COMMAND, EVAL_OTHER_COMMAND, OPENPIFPAF_PATH, ANNOTATIONS_SCORE_THRESH, OPENPIFPAF_PATH, MOCK_RUN
+import boto3
+from consts import (TRAIN_COMMAND,
+                    EVAL_COMMAND,
+                    OPENPIFPAF_PATH,
+                    ANNOTATIONS_SCORE_THRESH,
+                    OPENPIFPAF_PATH,
+                    MOCK_RUN,
+                    S3_BUCKET_NAME,
+                    S3_REGION)
+from botocore.config import Config
+
+s3_config = Config(
+    region_name = S3_REGION,
+    signature_version = 'v4',
+    retries = {
+        'max_attempts': 10,
+        'mode': 'standard'
+    }
+)
+
 
 class Model(object):
     def __init__(self, model_type, model_idx, num_train_epochs, train_image_dir, train_annotations, val_image_dir, val_annotations, next_gen_annotations):
@@ -37,7 +56,7 @@ class Model(object):
         """
         if metric == 'oks':
             checkpoint = self._model_output_file
-            eval_process_return_value = os.system(EVAL_OTHER_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
+            eval_process_return_value = os.system(EVAL_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
                                                                             model_output_file=checkpoint,
                                                                             dataset_image_dir=self._val_image_dir,
                                                                             dataset_annotations=self._val_annotations,
@@ -57,6 +76,7 @@ class Model(object):
         logging.info('Find max_id in train annotations')
         max_id = 0
         mock_num_keypoints = 0
+        mock_keypoints = None
         for idx, ann in enumerate(train_ann_data['annotations']):
             max_id = max(max_id, ann['id'])
             if MOCK_RUN and mock_num_keypoints == 0:
@@ -116,8 +136,8 @@ class Model(object):
         """
         Creates next gen annotations and merges them with train annotations
         """
-        if os.path.exists(self._next_gen_annotations):
-            eval_process_new_data_return_value = os.system(EVAL_OTHER_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
+        if self._next_gen_annotations is not None and os.path.exists(self._next_gen_annotations):
+            eval_process_new_data_return_value = os.system(EVAL_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
                                                 model_output_file=self._model_output_file,
                                                 dataset_image_dir=self._train_image_dir,
                                                 dataset_annotations=self._next_gen_annotations,
@@ -130,18 +150,24 @@ class Model(object):
         else:
             logging.info('next_gen_annotations file does not exist')
 
-    def save_results(self):
-        # TODO
-        eval_output_stats_file = self._eval_output_file + '.stats.json'
-        new_data_eval_stats_file = self._new_data_eval_file + '.stats_json'
+    def save_results(self, experiment_name):
+        eval_output_stats_file_name = self._eval_output_file + '.stats.json'
+        new_data_eval_stats_file_name = self._new_data_eval_file + '.stats.json'
 
-        files_list = [eval_output_stats_file, new_data_eval_stats_file]
-        for file in files_list:
-            cmd = 'git add ' + file + ' && ' \
-                + 'git commit -m "add stats file' + \
-                ' && ' + 'git push origin {branch_name}'.format(branch_name='noisy-student-flow')
-            os.system(cmd)
+        eval_output_stats_file_path = os.path.join(OPENPIFPAF_PATH, eval_output_stats_file_name)
+        new_data_eval_stats_file_path = os.path.join(OPENPIFPAF_PATH, new_data_eval_stats_file_name)
 
-    def upload_data_to_tensorboard(self):
-        # TODO
-        pass
+        files = [(eval_output_stats_file_name, eval_output_stats_file_path), (new_data_eval_stats_file_name, new_data_eval_stats_file_path)]
+        s3 = boto3.resource('s3', config=s3_config)
+        for filename, filepath in files:
+            if os.path.exists(filepath):
+                logging.info('Uploading to Bucket {} Experiment {} filename {}'.format(S3_BUCKET_NAME, experiment_name, filename))
+                s3.meta.client.upload_file(filepath, S3_BUCKET_NAME, experiment_name '{}/{}'.format(experiment_name, filename))
+
+    def save_logs(self, experiment_name):
+        filename = self._model_output_file + '.log'
+        filepath = os.path.join(OPENPIFPAF_PATH, logs_filename)
+        s3 = boto3.resource('s3', config=s3_config)
+        if os.path.exists(filepath):
+            logging.info('Uploading to Bucket {} Experiment {} filename {}'.format(S3_BUCKET_NAME, experiment_name, filename))
+            s3.meta.client.upload_file(filepath, S3_BUCKET_NAME, experiment_name '{}/{}'.format(experiment_name, filename))
