@@ -106,14 +106,13 @@ RUN rmdir /noisy_student/src_code/
 ENV OPENPIFPAF_PATH="/noisy_student/src/openpifpaf"
 ENV TRAIN_IMAGE_DIR="/noisy_student/src/data-mscoco/images/train2017"
 ENV VAL_IMAGE_DIR="/noisy_student/src/data-mscoco/images/val2017"
-ENV AWS_CREDENTIALS_FILE_PATH=$AWS_CREDENTIALS_FILE_PATH
+ARG AWS_ACCESS_ID
+ARG AWS_ACCESS_KEY
+ENV AWS_ACCESS_ID=$AWS_ACCESS_ID
+ENV AWS_ACCESS_KEY=$AWS_ACCESS_KEY
 
 # create openpifpaf directory
 RUN cd /noisy_student/src && git clone --single-branch --branch noisy-student https://github.com/atalyaalon/openpifpaf.git
-
-# Add AWS Credentials file
-RUN mkdir ~/.aws
-COPY $AWS_CREDENTIALS_FILE_PATH ~/.aws/credentials
 
 # run noisy student
 CMD python /noisy_student/src/noisy_student.py

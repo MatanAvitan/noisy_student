@@ -41,10 +41,10 @@ If not, try to reboot the machine using the reboot command:
 8. cd to the noisy_student directory:
 `cd noisy_student`
 
-9. Create your AWS Credentials file - copy it to your instance (for example, using scp).
+9. Create your AWS Credentials (AWS_ACCESS_ID and AWS_ACCESS_ID) - create them as local environment variables on your instance.
 
 10. Build the docker file:
-`sudo docker-compose build --build-arg AWS_CREDENTIALS_FILE_PATH=<your aws credentials file path>`
+`sudo docker-compose build --build-arg AWS_ACCESS_ID=$AWS_ACCESS_ID --build-arg AWS_ACCESS_KEY=$AWS_ACCESS_KEY`
 
 11. Create an S3 bucket for results, add the aws config file or credentials file to your env (see configuration guide [here](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html#guide-configuration)) - these two are needed to run the algorithm.
 
@@ -89,4 +89,4 @@ and run inside docker:
 `sudo docker container rm $(sudo docker container ls -aq)`
 
 17. To pull code from git, clear containers, build noisy student and run noisy student:
-`git pull && sudo docker container rm $(sudo docker container ls -aq) && sudo docker-compose build --build-arg AWS_CREDENTIALS_FILE_PATH=<your aws credentials file path> && <your docker run command - see sections 12 and 13>`
+`git pull && sudo docker container rm $(sudo docker container ls -aq) && sudo docker-compose build --build-arg AWS_ACCESS_ID=$AWS_ACCESS_ID --build-arg AWS_ACCESS_KEY=$AWS_ACCESS_KEY && <your docker run command - see sections 12 and 13>`

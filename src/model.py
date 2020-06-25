@@ -8,7 +8,9 @@ from consts import (TRAIN_COMMAND,
                     ANNOTATIONS_SCORE_THRESH,
                     MOCK_RUN,
                     S3_BUCKET_NAME,
-                    S3_REGION)
+                    S3_REGION,
+                    AWS_ACCESS_ID,
+                    AWS_ACCESS_KEY)
 from botocore.config import Config
 
 s3_config = Config(
@@ -158,7 +160,10 @@ class Model(object):
         new_data_eval_stats_file_path = os.path.join(OPENPIFPAF_PATH, new_data_eval_stats_file_name)
 
         files = [(eval_output_stats_file_name, eval_output_stats_file_path), (new_data_eval_stats_file_name, new_data_eval_stats_file_path)]
-        s3 = boto3.resource('s3', config=s3_config)
+        s3 = boto3.resource('s3',
+                            config=s3_config,
+                            aws_access_key_id=AWS_ACCESS_ID,
+                            aws_secret_access_key=AWS_ACCESS_KEY)
         for filename, filepath in files:
             if os.path.exists(filepath):
                 logging.info('Uploading to Bucket {bucket_name}, Experiment {experiment_name}, filename {filename}'.format(bucket_name=S3_BUCKET_NAME,
@@ -169,7 +174,10 @@ class Model(object):
     def save_logs(self, experiment_name):
         filename = self._model_output_file + '.log'
         filepath = os.path.join(OPENPIFPAF_PATH, logs_filename)
-        s3 = boto3.resource('s3', config=s3_config)
+        s3 = boto3.resource('s3',
+                            config=s3_config,
+                            aws_access_key_id=AWS_ACCESS_ID,
+                            aws_secret_access_key=AWS_ACCESS_KEY)
         if os.path.exists(filepath):
             logging.info('Uploading to Bucket {} Experiment {} filename {}'.format(S3_BUCKET_NAME, experiment_name, filename))
             s3.meta.client.upload_file(filepath, S3_BUCKET_NAME, os.path.join(experiment_name,filename))
