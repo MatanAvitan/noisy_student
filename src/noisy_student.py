@@ -7,7 +7,9 @@ from teacher import Teacher
 from consts import (NUM_TRAIN_EPOCHS,
                     S3_BUCKET_NAME,
                     S3_REGION,
-                    EXPERIMENT_NAME)
+                    EXPERIMENT_NAME,
+                    AWS_ACCESS_ID,
+                    AWS_ACCESS_KEY)
 from data_consts import (STUDENT_TEACHER_LOOP,
                          ANNOTATIONS_DIR,
                          NEW_ANNOTATIONS_DIR,
@@ -30,7 +32,10 @@ s3_config = Config(
 )
 
 def create_results_dir_in_s3(experiment_name):
-    s3 = boto3.client('s3', config=s3_config)
+    s3 = boto3.client('s3',
+                      config=s3_config,
+                      aws_access_key_id=AWS_ACCESS_ID,
+                      aws_secret_access_key=AWS_ACCESS_KEY)
     bucket_name = S3_BUCKET_NAME
     directory_name = experiment_name
     s3.put_object(Bucket=bucket_name, Key=(directory_name+'/'))
