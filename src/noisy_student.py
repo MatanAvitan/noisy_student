@@ -5,7 +5,6 @@ from student import Student
 from teacher import Teacher
 from consts import (NUM_TRAIN_EPOCHS,
                     S3_BUCKET_NAME,
-                    S3_REGION,
                     EXPERIMENT_NAME,
                     AWS_ACCESS_ID,
                     AWS_ACCESS_KEY)

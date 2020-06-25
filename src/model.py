@@ -8,7 +8,6 @@ from consts import (TRAIN_COMMAND,
                     ANNOTATIONS_SCORE_THRESH,
                     MOCK_RUN,
                     S3_BUCKET_NAME,
-                    S3_REGION,
                     AWS_ACCESS_ID,
                     AWS_ACCESS_KEY)
 
