@@ -142,7 +142,7 @@ class Model(object):
             logging.info('next_gen_annotations file does not exist')
 
     def save_results(self, experiment_name):
-        logging.info('Starting Saving Results of Model {model_idx} in S3'.format(self._model_idx))
+        logging.info('Starting Saving Results of Model {model_idx} in S3'.format(model_idx=self._model_idx))
         eval_output_stats_file_name = self._eval_output_file + '.stats.json'
         new_data_eval_stats_file_name = self._new_data_eval_file + '.stats.json'
 
@@ -159,10 +159,10 @@ class Model(object):
                                                                                                                            experiment_name=experiment_name,
                                                                                                                            filename=filename))
                 s3.meta.client.upload_file(filepath, S3_BUCKET_NAME, os.path.join(experiment_name,filename))
-        logging.info('Finished Saving Results of Model {model_idx} in S3'.format(self._model_idx))
+        logging.info('Finished Saving Results of Model {model_idx} in S3'.format(model_idx=self._model_idx))
 
     def save_logs(self, experiment_name):
-        logging.info('Starting Saving Logs of Model {model_idx} in S3'.format(self._model_idx))
+        logging.info('Starting Saving Logs of Model {model_idx} in S3'.format(model_idx=self._model_idx))
         filename = self._model_output_file + '.log'
         filepath = os.path.join(OPENPIFPAF_PATH, logs_filename)
         s3 = boto3.resource('s3',
@@ -171,4 +171,4 @@ class Model(object):
         if os.path.exists(filepath):
             logging.info('Uploading to Bucket {} Experiment {} filename {}'.format(S3_BUCKET_NAME, experiment_name, filename))
             s3.meta.client.upload_file(filepath, S3_BUCKET_NAME, os.path.join(experiment_name,filename))
-        logging.info('Finished Saving Logs of Model {model_idx} in S3'.format(self._model_idx))
+        logging.info('Finished Saving Logs of Model {model_idx} in S3'.format(model_idx=self._model_idx))
