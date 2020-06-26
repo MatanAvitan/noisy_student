@@ -203,7 +203,9 @@ class Model(object):
         val_image_names_of_humans = [image['file_name'] for image in val_ann_data['images'] if image['id'] in val_images_of_humans]
 
         for epoch in range(1, self._num_train_epochs+1, 20):
-            curr_model = '{}.epoch{:03d}'.format(self._model_output_file, epoch)
+            logging.info('Creating images predictions for TB - epoch {epoch}'.format(epoch=epoch))
+            curr_model = '{model_name}.epoch{:03d}'.format(self._model_output_file, epoch)
+            logging.info('epoch model name: {}'.format(curr_model))
             assert os.path.exists(curr_model)
             random_images_names = random.sample(val_image_names_of_humans, 20)
 
@@ -222,4 +224,5 @@ class Model(object):
                                       ' epoch {epoch}, image {image_name}'.format(epoch=epoch,
                                                                                    image_name=curr_image_name)
                 tb_writer.add_image(image_tb_file_name, img)
+            logging.info('Finished images predictions TB - epoch {epoch}'.format(epoch=epoch))
         logging.info('Finished image creation for TB of {model_idx} in S3'.format(model_idx=self._model_idx))
