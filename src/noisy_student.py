@@ -1,6 +1,7 @@
 import os
 import logging
 import boto3
+from torch.utils.tensorboard import SummaryWriter
 from student import Student
 from teacher import Teacher
 from consts import (NUM_TRAIN_EPOCHS,
