@@ -19,7 +19,7 @@ class Model(object):
         if full_data_model:
             model_output_file_suffix = '_full_training_data'
         else:
-            model_output_file_suffix + ''
+            model_output_file_suffix = ''
         self._model_output_file = 'model_type_{model_type}_model_no_{model_idx}'.format(model_idx=self._model_idx,
                                                                                         model_type=self._model_type) + model_output_file_suffix
         self._eval_output_file = 'eval_of_val_dataset_model_type_{model_type}_model_no_{model_idx}'.format(model_idx=self._model_idx,
