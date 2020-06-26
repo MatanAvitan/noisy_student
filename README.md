@@ -53,7 +53,7 @@ If not, try to reboot the machine using the reboot command:
                  --shm-size=100gb \
                  --name noisystudent \
                  --env MOCK_RUN=0 \
-                 --env NUM_TRAIN_EPOCHS=150 \
+                 --env NUM_TRAIN_EPOCHS=151 \
                  --env ANNOTATIONS_SCORE_THRESH=0.6 \
                  --env S3_BUCKET_NAME=<your bucket name> \
                  --env EXPERIMENT_NAME=<your experiment name> \
