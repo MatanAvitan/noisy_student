@@ -204,7 +204,7 @@ class Model(object):
 
         for epoch in range(1, self._num_train_epochs+1, 20):
             logging.info('Creating images predictions for TB - epoch {epoch}'.format(epoch=epoch))
-            curr_model = '{model_name}.epoch{:03d}'.format(self._model_output_file, epoch)
+            curr_model = '{}.epoch{:03d}'.format(self._model_output_file, epoch)
             logging.info('epoch model name: {}'.format(curr_model))
             assert os.path.exists(curr_model)
             random_images_names = random.sample(val_image_names_of_humans, 20)
