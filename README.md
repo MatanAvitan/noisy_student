@@ -90,3 +90,11 @@ and run inside docker:
 
 17. To pull code from git, clear containers, build noisy student and run noisy student:
 `git pull && sudo docker container rm $(sudo docker container ls -aq) && sudo docker-compose build --build-arg AWS_ACCESS_ID=$AWS_ACCESS_ID --build-arg AWS_ACCESS_KEY=$AWS_ACCESS_KEY && <your docker run command - see sections 12 and 13>`
+
+18. To run TensorBoard while the container is running:
+Make sure that in your run command you've added `-p 6006:6006`
+Now run the following:
+`sudo docker exec -it noisystudent bash`
+And inside docker shell run:
+`tensorboard --logdir src/openpifpaf/tb_logs/ --bind_all`
+And in your local machine run the following to forward the port: `ssh -i <your aws key> -NL 6006:localhost:6006 <your aws instance>`
