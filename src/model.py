@@ -205,8 +205,9 @@ class Model(object):
         for epoch in range(1, self._num_train_epochs+1, 20):
             logging.info('Creating images predictions for TB - epoch {epoch}'.format(epoch=epoch))
             curr_model = '{}.epoch{:03d}'.format(self._model_output_file, epoch)
+            curr_model_path = os.path.join(OPENPIFPAF_PATH, curr_model)
             logging.info('epoch model name: {}'.format(curr_model))
-            assert os.path.exists(curr_model)
+            assert os.path.exists(curr_model_path)
             random_images_names = random.sample(val_image_names_of_humans, 20)
 
             images_paths = [os.path.join(self._val_image_dir, image_name) \

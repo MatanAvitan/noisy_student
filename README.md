@@ -57,7 +57,7 @@ If not, try to reboot the machine using the reboot command:
                  --env ANNOTATIONS_SCORE_THRESH=0.6 \
                  --env S3_BUCKET_NAME=<your bucket name> \
                  --env EXPERIMENT_NAME=<your experiment name> \
-                 -p 0.0.0.0:6006:6006 \
+                 -p 6006:6006 \
                 bestteam/noisystudent:latest`
 
 Note: we did not use docker-compose in this stage since docker compose does not suppor NVIDIA GPUs yet - see [the following issue](https://github.com/docker/compose/issues/6691)
@@ -69,7 +69,7 @@ Note: we did not use docker-compose in this stage since docker compose does not 
                  --env MOCK_RUN=1 \
                  --env S3_BUCKET_NAME=<your bucket name> \
                  --env EXPERIMENT_NAME=<your experiment name> \
-                 -p 0.0.0.0:6006:6006 \
+                 -p 6006:6006 \
                  bestteam/noisystudent:latest`
 
 14. To find the trained models or logs in the docker - start the noisystudent container, and check the outputs directory:
