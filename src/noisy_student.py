@@ -26,7 +26,7 @@ logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
 
 tb_writer = SummaryWriter(os.path.join(OPENPIFPAF_PATH, 'tb_logs'))
-TB_IMAGE_OUTPUT_DIR_NAME = tb_image_output_dir
+TB_IMAGE_OUTPUT_DIR_NAME = 'tb_image_output_dir'
 
 def create_results_dir_in_s3(experiment_name):
     s3 = boto3.client('s3',
