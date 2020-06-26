@@ -1,10 +1,13 @@
 import os
 import json
 import logging
+import random
 import boto3
+from matplotlib.image import imread
 from data_consts import OPENPIFPAF_PATH, MERGED_TRAIN_ANNOTATIONS_FILE_PREFIX
 from consts import (TRAIN_COMMAND,
                     EVAL_COMMAND,
+                    PREDICT_COMMAND,
                     ANNOTATIONS_SCORE_THRESH,
                     MOCK_RUN,
                     S3_BUCKET_NAME,
@@ -189,3 +192,34 @@ class Model(object):
             logging.info('Uploading to Bucket {}, Experiment {}, Filename {}'.format(S3_BUCKET_NAME, experiment_name, filename))
             s3.meta.client.upload_file(filepath, S3_BUCKET_NAME, os.path.join(experiment_name,filename))
         logging.info('Finished Saving Model {model_idx} in S3'.format(model_idx=self._model_idx))
+
+    def create_images_for_tb(self, experiment_name, tb_writer, tb_image_output_dir):
+        logging.info('Starting image creation for TB of {model_idx} in S3'.format(model_idx=self._model_idx))
+        with open(os.path.join(OPENPIFPAF_PATH, self._val_annotations), 'r') as j:
+            val_ann_data = json.loads(j.read())
+        # filter annotation with category_id == 1 only
+        val_images_of_humans = set([ann['image_id'] for ann in val_ann_data['annotations'] if ann['category_id'] == 1])
+        # get images file_names
+        val_image_names_of_humans = [image['file_name'] for image in val_ann_data['images'] if image['id'] in val_images_of_humans]
+
+        for epoch in range(1, self._num_train_epochs+1, 20):
+            curr_model = '{}.epoch{:03d}'.format(self._model_output_file, epoch)
+            assert os.path.exists(curr_model)
+            random_images_names = random.sample(val_image_names_of_humans, 20)
+
+            images_paths = [os.path.join(self._val_image_dir, image_name) \
+                            for image_name in random_images_names]
+            os.system(PREDICT_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
+                                             images=' '.join(images_paths),
+                                             checkpoint=curr_model,
+                                             image_output_dir=tb_image_output_dir))
+            for image_name in random_images_names:
+                curr_pred_image_path = os.path.join(OPENPIFPAF_PATH, tb_image_output_dir, image_name.strip('.jpg') + '.predictions.png')
+                img = imread(curr_pred_image_path)
+                img = torch.from_numpy(np.array(img.cpu().permute(1, 2, 0)))
+                image_tb_file_name = 'Experiment {}'.format(experiment_name) + \
+                                      ' ' + curr_model + \
+                                      ' epoch {epoch}, image {image_name}'.format(epoch=epoch,
+                                                                                   image_name=curr_image_name)
+                tb_writer.add_image(image_tb_file_name, img)
+        logging.info('Finished image creation for TB of {model_idx} in S3'.format(model_idx=self._model_idx))

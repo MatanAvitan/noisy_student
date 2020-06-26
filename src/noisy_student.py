@@ -24,6 +24,9 @@ logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
                     level=logging.DEBUG,
                     datefmt='%Y-%m-%d %H:%M:%S')
 
+tb_writer = SummaryWriter(os.path.join(OPENPIFPAF_PATH, 'tb_logs'))
+TB_IMAGE_OUTPUT_DIR_NAME = tb_image_output_dir
+
 def create_results_dir_in_s3(experiment_name):
     s3 = boto3.client('s3',
                       aws_access_key_id=AWS_ACCESS_ID,
@@ -80,6 +83,9 @@ def main():
     teacher.save_results(experiment_name=EXPERIMENT_NAME)
     teacher.save_logs(experiment_name=EXPERIMENT_NAME)
     teacher.save_model(experiment_name=EXPERIMENT_NAME)
+    teacher.create_images_for_tb(experiment_name=EXPERIMENT_NAME,
+                                 tb_writer=tb_writer,
+                                 tb_image_output_dir=TB_IMAGE_OUTPUT_DIR_NAME)
 
     for model_idx in range(initial_model_idx+1, STUDENT_TEACHER_LOOP):
         last_model_in_loop = model_idx == STUDENT_TEACHER_LOOP-1
@@ -117,6 +123,9 @@ def main():
         teacher.save_results(experiment_name=EXPERIMENT_NAME)
         teacher.save_logs(experiment_name=EXPERIMENT_NAME)
         teacher.save_model(experiment_name=EXPERIMENT_NAME)
+        teacher.create_images_for_tb(experiment_name=EXPERIMENT_NAME,
+                                     tb_writer=tb_writer,
+                                     tb_image_output_dir=TB_IMAGE_OUTPUT_DIR)
 
     full_data_model = create_full_data_model_for_comparison(model_idx+1)
     full_data_model.fit()
@@ -124,6 +133,10 @@ def main():
     teacher.save_results(experiment_name=EXPERIMENT_NAME)
     teacher.save_logs(experiment_name=EXPERIMENT_NAME)
     teacher.save_model(experiment_name=EXPERIMENT_NAME)
+    teacher.create_images_for_tb(experiment_name=EXPERIMENT_NAME,
+                                 tb_writer=tb_writer,
+                                 tb_image_output_dir=TB_IMAGE_OUTPUT_DIR)
+    tb_writer.close()
 
 if __name__ == '__main__':
     main()

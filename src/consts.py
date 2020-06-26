@@ -50,3 +50,9 @@ EVAL_COMMAND = """cd {openpifpaf_path} && \
                             --dataset-image-dir {dataset_image_dir} \
                             --dataset-annotations {dataset_annotations} \
                             --output {eval_output_file}"""
+
+PREDICT_COMMAND = """cd {openpifpaf_path} && \
+                        python -m openpifpaf.predict \
+                            {images} \
+                            --checkpoint {checkpoint} \
+                            --image-output {image_output_dir}"""
