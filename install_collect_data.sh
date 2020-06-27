@@ -85,4 +85,4 @@ export TRAIN_IMAGE_DIR="src/data-mscoco/images/train2017"
 export VAL_IMAGE_DIR="src/data-mscoco/images/val2017"
 
 # create openpifpaf directory
-cd src && git clone --single-branch --branch noisy-student https://github.com/atalyaalon/openpifpaf.git
+cd src && git clone --single-branch --branch noisy-student https://github.com/atalyaalon/openpifpaf.git && cd ..
