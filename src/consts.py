@@ -1,6 +1,7 @@
 import os
 
 MOCK_RUN = bool(os.getenv("MOCK_RUN"))
+MOCK_ONE_MODEL = bool(os.getenv("MOCK_ONE_MODEL"))
 if MOCK_RUN:
     NUM_TRAIN_EPOCHS = 1
     ANNOTATIONS_SCORE_THRESH = 0

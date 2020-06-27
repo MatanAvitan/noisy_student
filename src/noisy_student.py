@@ -8,7 +8,8 @@ from consts import (NUM_TRAIN_EPOCHS,
                     S3_BUCKET_NAME,
                     EXPERIMENT_NAME,
                     AWS_ACCESS_ID,
-                    AWS_ACCESS_KEY)
+                    AWS_ACCESS_KEY,
+                    MOCK_ONE_MODEL)
 from data_consts import (STUDENT_TEACHER_LOOP,
                          ANNOTATIONS_DIR,
                          NEW_ANNOTATIONS_DIR,
@@ -84,6 +85,8 @@ def main():
     teacher.save_results(experiment_name=EXPERIMENT_NAME)
     teacher.save_logs(experiment_name=EXPERIMENT_NAME)
     teacher.save_model(experiment_name=EXPERIMENT_NAME)
+    if MOCK_ONE_MODEL:
+        return
     teacher.create_images_for_tb(experiment_name=EXPERIMENT_NAME,
                                  tb_writer=tb_writer,
                                  tb_image_output_dir=TB_IMAGE_OUTPUT_DIR_NAME)

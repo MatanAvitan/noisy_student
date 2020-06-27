@@ -53,6 +53,7 @@ If not, try to reboot the machine using the reboot command:
                  --shm-size=100gb \
                  --name noisystudent \
                  --env MOCK_RUN=0 \
+                 --env MOCK_ONE_MODEL=0 \
                  --env NUM_TRAIN_EPOCHS=151 \
                  --env ANNOTATIONS_SCORE_THRESH=0.6 \
                  --env S3_BUCKET_NAME=<your bucket name> \
@@ -67,12 +68,15 @@ Note: we did not use docker-compose in this stage since docker compose does not 
                  --shm-size=100gb \
                  --name noisystudent \
                  --env MOCK_RUN=1 \
+                 --env MOCK_ONE_MODEL=0 \
                  --env S3_BUCKET_NAME=<your bucket name> \
                  --env EXPERIMENT_NAME=<your experiment name> \
                  -p 6006:6006 \
                  bestteam/noisystudent:latest`
 
-14. To find the trained models or logs in the docker - start the noisystudent container, and check the outputs directory:
+14. If you want to mock the creation of once model only, change --env MOCK_ONE_MODEL=1 in the run command (change 1 instead of 0)
+
+15. To find the trained models or logs in the docker - start the noisystudent container, and check the outputs directory:
 ```sh
 sudo docker start noisystudent
 sudo docker exec -it noisystudent bash
@@ -82,16 +86,16 @@ and run inside docker:
 
 (To exit the container use ctrl-D)
 
-15. To stop the noisystudent container run:
+16. To stop the noisystudent container run:
 `sudo docker stop noisystudent`
 
-16. To clear the containers run:
+17. To clear the containers run:
 `sudo docker container rm $(sudo docker container ls -aq)`
 
-17. To pull code from git, clear containers, build noisy student and run noisy student:
+18. To pull code from git, clear containers, build noisy student and run noisy student:
 `git pull && sudo docker container rm $(sudo docker container ls -aq) && sudo docker-compose build --build-arg AWS_ACCESS_ID=$AWS_ACCESS_ID --build-arg AWS_ACCESS_KEY=$AWS_ACCESS_KEY && <your docker run command - see sections 12 and 13>`
 
-18. To run TensorBoard while the container is running:
+19. To run TensorBoard while the container is running:
 Make sure that in your run command you've added `-p 6006:6006`
 Now run the following:
 `sudo docker exec -it noisystudent bash`
