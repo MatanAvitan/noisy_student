@@ -51,7 +51,7 @@ export EVAL_DIR="src/eval"
 export COCOSPLIT_PATH="src/cocosplit.py"
 
 # install data requirements
-pip install -r src/data_requirements.txt
+pip install -r data_requirements.txt
 
 # split data annotations
 python src/data_splitter.py
