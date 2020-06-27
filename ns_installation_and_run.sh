@@ -57,6 +57,9 @@ export ORIGINAL_VAL_ANNOTATION_FILE="person_keypoints_val2017.json"
 export OUTPUT_DIR="src/outputs"
 export EVAL_DIR="src/eval"
 export COCOSPLIT_PATH="src/cocosplit.py"
+export OPENPIFPAF_PATH="src/openpifpaf"
+export TRAIN_IMAGE_DIR="src/data-mscoco/images/train2017"
+export VAL_IMAGE_DIR="src/data-mscoco/images/val2017"
 
 # install data requirements
 pip install -r data_requirements.txt
