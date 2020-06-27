@@ -26,7 +26,7 @@ sudo apt-get install -y \
   && sudo pip install --upgrade pip
 
 # create virtualenv
-sudo apt-get install virtualenv
+sudo apt-get -y install virtualenv
 virtualenv -p python3 ~/.venvs/noisy_student_36
 source ~/.venvs/noisy_student_36/bin/activate
 
@@ -44,6 +44,7 @@ if  [ ! -d "src/data-mscoco" ]; then \
         unzip train2017.zip ; \
 fi
 
+cd ../../
 mkdir src/data-mscoco/annotations/new
 mkdir src/data-mscoco/annotations/original
 mv src/data-mscoco/annotations/person_keypoints_train2017.json src/data-mscoco/annotations/original
