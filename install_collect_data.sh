@@ -35,7 +35,7 @@ sleep 2
 
 sudo apt-get install -y \
     python3-pip python3.6 python3.6-dev \
-  && sudo cd /usr/local/bin \
+  && cd /usr/local/bin \
   && sudo ln -s /usr/bin/python3.6 python \
     && sudo ln -s /usr/bin/pip3 pip \
   && sudo pip install --upgrade pip
