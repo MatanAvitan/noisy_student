@@ -11,7 +11,7 @@ sudo apt-get update && \
 
 sudo apt install -y --reinstall software-properties-common
 
-sudo apt install -y python3-apt
+sudo apt-get install --reinstall python3-apt
 
 sudo add-apt-repository ppa:deadsnakes/ppa
 
