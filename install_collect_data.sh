@@ -34,11 +34,7 @@ sudo apt-get install -y --reinstall python3-software-properties
 sleep 2
 
 sudo apt-get install -y \
-    python3-pip python3.6 python3.6-dev \
-  && cd /usr/local/bin \
-  && sudo ln -s /usr/bin/python3.6 python \
-    && sudo ln -s /usr/bin/pip3 pip \
-  && sudo pip install --upgrade pip
+    python3-pip python3.6 python3.6-dev
 
 sleep 2
 
