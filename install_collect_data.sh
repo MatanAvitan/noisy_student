@@ -16,6 +16,10 @@ sudo apt install -y --reinstall software-properties-common
 
 sleep 2
 
+sudo add-apt-repository -y ppa:deadsnakes/ppa
+
+sleep 2
+
 sudo apt-get remove -y python3-apt
 
 sleep 2
@@ -26,9 +30,6 @@ sleep 2
 
 sudo apt-get install -y --reinstall python3-software-properties
 
-sleep 2
-
-sudo add-apt-repository -y ppa:deadsnakes/ppa
 
 sleep 2
 
