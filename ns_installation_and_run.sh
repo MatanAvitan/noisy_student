@@ -13,12 +13,12 @@ sudo apt install -y --reinstall software-properties-common
 
 sudo add-apt-repository ppa:deadsnakes/ppa
 
-apt-get install -y \
-    python3-pip python3.6 python3.6-dev \
-  && cd /usr/local/bin \
-  && ln -s /usr/bin/python3.6 python \
-    && ln -s /usr/bin/pip3 pip \
-  && pip install --upgrade pip
+sudo apt-get install -y \
+    python3-pip python3.6 python-apt python3.6-dev \
+  && sudo cd /usr/local/bin \
+  && sudo ln -s /usr/bin/python3.6 python \
+    && sudo ln -s /usr/bin/pip3 pip \
+  && sudo pip install --upgrade pip
 
 # get data
 if  [ ! -d "src/data-mscoco" ]; then \
