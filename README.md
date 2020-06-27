@@ -108,13 +108,11 @@ And inside docker shell run:
 `tensorboard --logdir src/openpifpaf/tb_logs/ --bind_all`
 And in your local machine run the following to forward the port: `ssh -i <your aws key> -NL 6006:localhost:6006 <your aws instance>`
 
-**Using Shell scripts - see sections 20 to 22:**
+**Using Shell scripts - see sections 20 to 21:**
 
 20. Create additional environment variables, depending on your run configuration, for example for a full mock run (including creating images):
 `export S3_BUCKET_NAME=<your bucket name> ; export EXPERIMENT_NAME=<your experiment name> ; export MOCK_RUN=1 ; export MOCK_ONE_MODEL=0; CREATE_IMAGES=1`
 And for a full run :
 `export S3_BUCKET_NAME=<your bucket name> ; export EXPERIMENT_NAME=<your experiment name> ; export MOCK_RUN=0 ; export MOCK_ONE_MODEL=0; ANNOTATIONS_SCORE_THRESH=0.6 ; NUM_TRAIN_EPOCHS=101 ; CREATE_IMAGES=1`
 
-21. change shell script permissions: `chmod +rwx ./ns_installation_and_run.sh
-
-22. run: `./ns_installation_and_run.sh`
+21. run: `./ns_installation_and_run.sh`
