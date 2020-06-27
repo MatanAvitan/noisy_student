@@ -18,8 +18,8 @@ pylint
 pytest
 opencv-python
 thop
-matplotlib
-pycocotools-fix
+matplotlib==3.2.1
+pycocotools-fix==2.0.0.1
 tensorboard
 six==1.12.0
 boto3
