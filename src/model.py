@@ -212,12 +212,13 @@ class Model(object):
 
             images_paths = [os.path.join(self._val_image_dir, image_name) \
                             for image_name in random_images_names]
-            os.system(PREDICT_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
-                                             images=' '.join(images_paths),
-                                             checkpoint=curr_model,
-                                             image_output_dir=tb_image_output_dir))
+            for image_path in images_paths:
+                os.system(PREDICT_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
+                                                 images=image_path,
+                                                 checkpoint=curr_model,
+                                                 image_output_dir=tb_image_output_dir))
             for image_name in random_images_names:
-                curr_pred_image_path = os.path.join(OPENPIFPAF_PATH, tb_image_output_dir, image_name.strip('.jpg') + '.predictions.png')
+                curr_pred_image_path = os.path.join(OPENPIFPAF_PATH, tb_image_output_dir, image_name + '.predictions.png')
                 img = imread(curr_pred_image_path)
                 img = torch.from_numpy(np.array(img.cpu().permute(1, 2, 0)))
                 image_tb_file_name = 'Experiment {}'.format(experiment_name) + \
