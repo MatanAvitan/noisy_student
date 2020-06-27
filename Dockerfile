@@ -11,10 +11,14 @@ RUN apt-get update && \
     wget \
     time
 
+RUN sudo apt install -y --reinstall software-properties-common
+
+RUN sudo add-apt-repository ppa:deadsnakes/ppa
+
 RUN apt-get install -y \
-    python3-pip python3 \
+    python3-pip python3.6 \
   && cd /usr/local/bin \
-  && ln -s /usr/bin/python3 python \
+  && ln -s /usr/bin/python3.6 python \
     && ln -s /usr/bin/pip3 pip \
   && pip install --upgrade pip
 
