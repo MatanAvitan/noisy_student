@@ -41,7 +41,8 @@ if  [ ! -d "src/data-mscoco" ]; then \
         wget http://images.cocodataset.org/zips/val2017.zip && \
         unzip val2017.zip && \
         wget http://images.cocodataset.org/zips/train2017.zip && \
-        unzip train2017.zip ; \
+        unzip train2017.zip && \
+        cd ../.. ; \
 fi
 
 sudo mkdir src/data-mscoco/annotations/new
@@ -83,6 +84,3 @@ export VAL_IMAGE_DIR="src/data-mscoco/images/val2017"
 
 # create openpifpaf directory
 cd src && git clone --single-branch --branch noisy-student https://github.com/atalyaalon/openpifpaf.git
-
-# run noisy student
-python src/noisy_student.py
