@@ -16,7 +16,7 @@ sudo apt-get install -y --reinstall python3-apt
 
 sudo apt-get install -y --reinstall python3-software-properties
 
-sudo add-apt-repository ppa:deadsnakes/ppa
+sudo add-apt-repository -y ppa:deadsnakes/ppa
 
 sudo apt-get install -y \
     python3-pip python3.6 python3.6-dev \
