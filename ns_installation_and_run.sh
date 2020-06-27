@@ -1,15 +1,13 @@
 #!/bin/sh
 
-apt-get update && \
-    apt-get install -y \
+sudo apt-get update && \
+    sudo apt-get install -y \
     curl \
-    sudo \
     ca-certificates \
     git \
     unzip \
     wget \
-    time \
-    git
+    time
 
 sudo apt install -y --reinstall software-properties-common
 
