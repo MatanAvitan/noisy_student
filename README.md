@@ -43,6 +43,11 @@ If not, try to reboot the machine using the reboot command:
 
 9. Create your AWS Credentials (AWS_ACCESS_ID and AWS_ACCESS_ID) - create them as local environment variables on your instance.
 
+10. There are 2 options for running the noisy_student algorithm: either docker or shell script.
+If running in docker, the CREATE_IMAGES variable is by default False - since for some reason the openpifpaf predict code does not run inside the docker.
+
+**Using Docker - see sections 10 to 19:**
+
 10. Build the docker file:
 `sudo docker-compose build --build-arg AWS_ACCESS_ID=$AWS_ACCESS_ID --build-arg AWS_ACCESS_KEY=$AWS_ACCESS_KEY`
 
@@ -102,3 +107,12 @@ Now run the following:
 And inside docker shell run:
 `tensorboard --logdir src/openpifpaf/tb_logs/ --bind_all`
 And in your local machine run the following to forward the port: `ssh -i <your aws key> -NL 6006:localhost:6006 <your aws instance>`
+
+**Using Shell scripts - see sections 20:**
+
+20. Create additional environment variables, depending on your run configuration, for example for a full mock run (including creating images):
+`export S3_BUCKET_NAME=<your bucket name> ; export EXPERIMENT_NAME=<your experiment name> ; export MOCK_RUN=1 ; export MOCK_ONE_MODEL=0; CREATE_IMAGES=1`
+And for a full run :
+`export S3_BUCKET_NAME=<your bucket name> ; export EXPERIMENT_NAME=<your experiment name> ; export MOCK_RUN=0 ; export MOCK_ONE_MODEL=0; ANNOTATIONS_SCORE_THRESH=0.6 ; NUM_TRAIN_EPOCHS=101 ; CREATE_IMAGES=1`
+
+21. run: `bash ./ns_installation_and_run.sh`

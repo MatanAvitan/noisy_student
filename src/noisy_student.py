@@ -9,7 +9,8 @@ from consts import (NUM_TRAIN_EPOCHS,
                     EXPERIMENT_NAME,
                     AWS_ACCESS_ID,
                     AWS_ACCESS_KEY,
-                    MOCK_ONE_MODEL)
+                    MOCK_ONE_MODEL,
+                    CREATE_IMAGES)
 from data_consts import (STUDENT_TEACHER_LOOP,
                          ANNOTATIONS_DIR,
                          NEW_ANNOTATIONS_DIR,
@@ -87,9 +88,10 @@ def main():
     teacher.save_model(experiment_name=EXPERIMENT_NAME)
     if MOCK_ONE_MODEL:
         return
-    teacher.create_images_for_tb(experiment_name=EXPERIMENT_NAME,
-                                 tb_writer=tb_writer,
-                                 tb_image_output_dir=TB_IMAGE_OUTPUT_DIR_NAME)
+    if CREATE_IMAGES:
+        teacher.create_images_for_tb(experiment_name=EXPERIMENT_NAME,
+                                     tb_writer=tb_writer,
+                                     tb_image_output_dir=TB_IMAGE_OUTPUT_DIR_NAME)
 
     for model_idx in range(initial_model_idx+1, STUDENT_TEACHER_LOOP):
         last_model_in_loop = model_idx == STUDENT_TEACHER_LOOP-1
@@ -127,9 +129,10 @@ def main():
         teacher.save_results(experiment_name=EXPERIMENT_NAME)
         teacher.save_logs(experiment_name=EXPERIMENT_NAME)
         teacher.save_model(experiment_name=EXPERIMENT_NAME)
-        teacher.create_images_for_tb(experiment_name=EXPERIMENT_NAME,
-                                     tb_writer=tb_writer,
-                                     tb_image_output_dir=TB_IMAGE_OUTPUT_DIR)
+        if CREATE_IMAGES:
+            teacher.create_images_for_tb(experiment_name=EXPERIMENT_NAME,
+                                         tb_writer=tb_writer,
+                                         tb_image_output_dir=TB_IMAGE_OUTPUT_DIR)
 
     full_data_model = create_full_data_model_for_comparison(model_idx+1)
     full_data_model.fit()
@@ -137,9 +140,10 @@ def main():
     teacher.save_results(experiment_name=EXPERIMENT_NAME)
     teacher.save_logs(experiment_name=EXPERIMENT_NAME)
     teacher.save_model(experiment_name=EXPERIMENT_NAME)
-    teacher.create_images_for_tb(experiment_name=EXPERIMENT_NAME,
-                                 tb_writer=tb_writer,
-                                 tb_image_output_dir=TB_IMAGE_OUTPUT_DIR)
+    if CREATE_IMAGES:
+        teacher.create_images_for_tb(experiment_name=EXPERIMENT_NAME,
+                                     tb_writer=tb_writer,
+                                     tb_image_output_dir=TB_IMAGE_OUTPUT_DIR)
     tb_writer.close()
 
 if __name__ == '__main__':
