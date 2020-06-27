@@ -24,7 +24,7 @@ apt-get install -y \
 
 # get data
 if  [ ! -d "src/data-mscoco" ]; then \
-        mkdir src && mkdir src/data-mscoco && cd src/data-mscoco && \
+        mkdir src/data-mscoco && cd src/data-mscoco && \
         wget http://images.cocodataset.org/annotations/annotations_trainval2017.zip && \
         unzip annotations_trainval2017.zip && \
         wget http://images.cocodataset.org/annotations/image_info_test2017.zip && \
