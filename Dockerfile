@@ -17,6 +17,7 @@ RUN sudo add-apt-repository ppa:deadsnakes/ppa
 
 RUN apt-get install -y \
     python3-pip python3.6 \
+    python3-pip python3.6 python3.6-dev \
   && cd /usr/local/bin \
   && ln -s /usr/bin/python3.6 python \
     && ln -s /usr/bin/pip3 pip \
