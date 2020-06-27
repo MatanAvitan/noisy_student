@@ -46,9 +46,9 @@ if  [ ! -d "src/data-mscoco" ]; then \
 fi
 
 sudo mkdir src/data-mscoco/annotations/new
-sudo -R o+rwx src/data-mscoco/annotations/new
+sudo chmod -R o+rwx src/data-mscoco/annotations/new
 sudo mkdir src/data-mscoco/annotations/original
-sudo -R o+rwx src/data-mscoco/annotations/original
+sudo chmod -R o+rwx src/data-mscoco/annotations/original
 sudo mv src/data-mscoco/annotations/person_keypoints_train2017.json src/data-mscoco/annotations/original
 sudo mv src/data-mscoco/annotations/person_keypoints_val2017.json src/data-mscoco/annotations/original
 
