@@ -34,7 +34,7 @@ def main():
     splitter = DataSplitter(annotation_file_path=os.path.join(ANNOTATIONS_DIR,ORIGINAL_ANNOTATIONS_DIR, ORIGINAL_TRAIN_ANNOTATION_FILE),
                             train_split_percentage=train_split_percentage,
                             train_output_file=os.path.join(ANNOTATIONS_DIR,NEW_ANNOTATIONS_DIR,'annotations_file_model_idx_{model_idx}'.format(model_idx=initial_model_idx)),
-                            test_output_file=os.path.join(ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR, ANNOTATIONS_DIR,NEW_ANNOTATIONS_DIR,'unused_annotations_file_model_idx_{model_idx}'.format(model_idx=initial_model_idx)))
+                            test_output_file=os.path.join(ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR,'unused_annotations_file_model_idx_{model_idx}'.format(model_idx=initial_model_idx)))
 
     splitter.split()
     for curr_model_idx, train_split_percentage in zip(range(initial_model_idx+1,STUDENT_TEACHER_LOOP-1), TRAIN_SPLIT_PERCENTAGES[1:]):
@@ -46,7 +46,7 @@ def main():
             test_output_file = os.path.join(ANNOTATIONS_DIR,NEW_ANNOTATIONS_DIR,'unused_annotations_file_model_idx_{curr_model_idx}'.format(curr_model_idx=curr_model_idx))
         splitter = DataSplitter(annotation_file_path=annotation_file_path,
                                 train_split_percentage=train_split_percentage,
-                                train_output_file=os.path.join(ANNOTATIONS_DIR,NEW_ANNOTATIONS_DIR,'annotations_file_model_idx_{curr_model_idx}'.format(curr_model_idx=curr_model_idx)),
+                                train_output_file=os.path.join(ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR, 'annotations_file_model_idx_{curr_model_idx}'.format(curr_model_idx=curr_model_idx)),
                                 test_output_file=test_output_file)
         splitter.split()
     # rename last unused_annotations_file to annotations_file
