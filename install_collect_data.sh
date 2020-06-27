@@ -42,7 +42,7 @@ if  [ ! -d "src/data-mscoco" ]; then \
         unzip val2017.zip && \
         wget http://images.cocodataset.org/zips/train2017.zip && \
         unzip train2017.zip && \
-        cd ../.. ; \
+        cd ../../.. ; \
 fi
 
 sudo mkdir src/data-mscoco/annotations/new
