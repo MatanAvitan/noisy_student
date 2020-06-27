@@ -59,6 +59,7 @@ If running in docker, the CREATE_IMAGES variable is by default False - since for
                  --name noisystudent \
                  --env MOCK_RUN=0 \
                  --env MOCK_ONE_MODEL=0 \
+                 --env CREATE_IMAGES=0 \
                  --env NUM_TRAIN_EPOCHS=151 \
                  --env ANNOTATIONS_SCORE_THRESH=0.6 \
                  --env S3_BUCKET_NAME=<your bucket name> \
@@ -74,6 +75,7 @@ Note: we did not use docker-compose in this stage since docker compose does not 
                  --name noisystudent \
                  --env MOCK_RUN=1 \
                  --env MOCK_ONE_MODEL=0 \
+                 --env CREATE_IMAGES=0 \
                  --env S3_BUCKET_NAME=<your bucket name> \
                  --env EXPERIMENT_NAME=<your experiment name> \
                  -p 6006:6006 \
