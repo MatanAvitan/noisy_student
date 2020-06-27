@@ -25,6 +25,11 @@ sudo apt-get install -y \
     && sudo ln -s /usr/bin/pip3 pip \
   && sudo pip install --upgrade pip
 
+# create virtualenv
+sudo apt-get install virtualenv
+virtualenv -p python3 ~/.venvs/noisy_student_36
+source ~/.venvs/noisy_student_36/bin/activate
+
 # get data
 if  [ ! -d "src/data-mscoco" ]; then \
         mkdir src/data-mscoco && cd src/data-mscoco && \
