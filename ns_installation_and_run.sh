@@ -44,11 +44,10 @@ if  [ ! -d "src/data-mscoco" ]; then \
         unzip train2017.zip ; \
 fi
 
-cd ../../
-mkdir src/data-mscoco/annotations/new
-mkdir src/data-mscoco/annotations/original
-mv src/data-mscoco/annotations/person_keypoints_train2017.json src/data-mscoco/annotations/original
-mv src/data-mscoco/annotations/person_keypoints_val2017.json src/data-mscoco/annotations/original
+sudo mkdir src/data-mscoco/annotations/new
+sudo mkdir src/data-mscoco/annotations/original
+sudo mv src/data-mscoco/annotations/person_keypoints_train2017.json src/data-mscoco/annotations/original
+sudo mv src/data-mscoco/annotations/person_keypoints_val2017.json src/data-mscoco/annotations/original
 
 export ANNOTATIONS_DIR="src/data-mscoco/annotations"
 export NEW_ANNOTATIONS_DIR="new"
@@ -66,10 +65,10 @@ pip install -r data_requirements.txt
 python src/data_splitter.py
 
 # mkdir OUTPUT_DIR
-mkdir $OUTPUT_DIR
+sudo mkdir $OUTPUT_DIR
 
 # mkdir EVAL_DIR
-mkdir $EVAL_DIR
+sudo mkdir $EVAL_DIR
 
 # install requirements
 pip install -r requirements.txt
