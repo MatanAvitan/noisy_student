@@ -10,14 +10,27 @@ sudo apt-get update && \
     wget \
     time
 
+sleep 2
+
 sudo apt install -y --reinstall software-properties-common
 
+sleep 2
+
 sudo apt-get remove -y python3-apt
+
+sleep 2
+
 sudo apt-get install -y --reinstall python3-apt
+
+sleep 2
 
 sudo apt-get install -y --reinstall python3-software-properties
 
+sleep 2
+
 sudo add-apt-repository -y ppa:deadsnakes/ppa
+
+sleep 2
 
 sudo apt-get install -y \
     python3-pip python3.6 python3.6-dev \
@@ -26,10 +39,14 @@ sudo apt-get install -y \
     && sudo ln -s /usr/bin/pip3 pip \
   && sudo pip install --upgrade pip
 
+sleep 2
+
 # create virtualenv
 sudo apt-get -y install virtualenv
 virtualenv -p python3 ~/.venvs/noisy_student_36
 source ~/.venvs/noisy_student_36/bin/activate
+
+sleep 2
 
 # get data
 if  [ ! -d "src/data-mscoco" ]; then \
@@ -45,6 +62,8 @@ if  [ ! -d "src/data-mscoco" ]; then \
         unzip train2017.zip && \
         cd ../../.. ; \
 fi
+
+sleep 2
 
 sudo mkdir src/data-mscoco/annotations/new
 sudo chmod -R o+rwx src/data-mscoco/annotations/new
@@ -65,17 +84,25 @@ export OPENPIFPAF_PATH="src/openpifpaf"
 export TRAIN_IMAGE_DIR="src/data-mscoco/images/train2017"
 export VAL_IMAGE_DIR="src/data-mscoco/images/val2017"
 
+sleep 2
+
 # install data requirements
 pip install -r data_requirements.txt
 
+sleep 2
+
 # split data annotations
 python src/data_splitter.py
+
+sleep 2
 
 # mkdir OUTPUT_DIR
 sudo mkdir $OUTPUT_DIR
 
 # mkdir EVAL_DIR
 sudo mkdir $EVAL_DIR
+
+sleep 2
 
 # install requirements
 pip install -r requirements.txt
@@ -84,6 +111,8 @@ pip install -r requirements.txt
 export OPENPIFPAF_PATH="src/openpifpaf"
 export TRAIN_IMAGE_DIR="src/data-mscoco/images/train2017"
 export VAL_IMAGE_DIR="src/data-mscoco/images/val2017"
+
+sleep 2
 
 # create openpifpaf directory
 cd src && git clone --single-branch --branch noisy-student https://github.com/atalyaalon/openpifpaf.git && cd ..
