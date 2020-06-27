@@ -44,7 +44,7 @@ If not, try to reboot the machine using the reboot command:
 9. Create your AWS Credentials (AWS_ACCESS_ID and AWS_ACCESS_ID) - create them as local environment variables on your instance.
 
 10. There are 2 options for running the noisy_student algorithm: either docker or shell script.
-If running in docker, the CREATE_IMAGES variable is by default False - since for some reason the openpifpaf predict code does not run inside the docker.
+(When running in docker always use --env CREATE_IMAGES=FALSE since creating images does not work in docker environment )
 
 **Using Docker - see sections 10 to 19:**
 
@@ -57,10 +57,10 @@ If running in docker, the CREATE_IMAGES variable is by default False - since for
 `sudo docker run --gpus all \
                  --shm-size=100gb \
                  --name noisystudent \
-                 --env MOCK_RUN=0 \
-                 --env MOCK_ONE_MODEL=0 \
-                 --env CREATE_IMAGES=0 \
-                 --env NUM_TRAIN_EPOCHS=151 \
+                 --env MOCK_RUN=FALSE \
+                 --env MOCK_ONE_MODEL=FALSE \
+                 --env CREATE_IMAGES=FALSE \
+                 --env NUM_TRAIN_EPOCHS=101 \
                  --env ANNOTATIONS_SCORE_THRESH=0.6 \
                  --env S3_BUCKET_NAME=<your bucket name> \
                  --env EXPERIMENT_NAME=<your experiment name> \
@@ -73,15 +73,15 @@ Note: we did not use docker-compose in this stage since docker compose does not 
 `sudo docker run --gpus all \
                  --shm-size=100gb \
                  --name noisystudent \
-                 --env MOCK_RUN=1 \
-                 --env MOCK_ONE_MODEL=0 \
-                 --env CREATE_IMAGES=0 \
+                 --env MOCK_RUN=TRUE \
+                 --env MOCK_ONE_MODEL=FALSE \
+                 --env CREATE_IMAGES=FALSE \
                  --env S3_BUCKET_NAME=<your bucket name> \
                  --env EXPERIMENT_NAME=<your experiment name> \
                  -p 6006:6006 \
                  bestteam/noisystudent:latest`
 
-14. If you want to mock the creation of once model only, change --env MOCK_ONE_MODEL=1 in the run command (change 1 instead of 0)
+14. If you want to mock the creation of once model only, change --env MOCK_ONE_MODEL=TRUE in the run command
 
 15. To find the trained models or logs in the docker - start the noisystudent container, and check the outputs directory:
 ```sh
@@ -113,9 +113,9 @@ And in your local machine run the following to forward the port: `ssh -i <your a
 **Using Shell scripts - see sections 20 to 22:**
 
 20. Create additional environment variables, depending on your run configuration, for example for a full mock run (including creating images):
-`export S3_BUCKET_NAME=<your bucket name> ; export EXPERIMENT_NAME=<your experiment name> ; export MOCK_RUN=1 ; export MOCK_ONE_MODEL=0; CREATE_IMAGES=1`
+`export S3_BUCKET_NAME=<your bucket name> ; export EXPERIMENT_NAME=<your experiment name> ; export MOCK_RUN=TRUE ; export MOCK_ONE_MODEL=FALSE; export CREATE_IMAGES=FALSE`
 And for a full run :
-`export S3_BUCKET_NAME=<your bucket name> ; export EXPERIMENT_NAME=<your experiment name> ; export MOCK_RUN=0 ; export MOCK_ONE_MODEL=0; ANNOTATIONS_SCORE_THRESH=0.6 ; NUM_TRAIN_EPOCHS=101 ; CREATE_IMAGES=1`
+`export S3_BUCKET_NAME=<your bucket name> ; export EXPERIMENT_NAME=<your experiment name> ; export MOCK_RUN=FALSE ; export MOCK_ONE_MODEL=FALSE; export CREATE_IMAGES=FALSE; export ANNOTATIONS_SCORE_THRESH=0.6 ; export NUM_TRAIN_EPOCHS=101`
 
 21. run: `./install_collect_data.sh`
 

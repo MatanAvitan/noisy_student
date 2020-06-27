@@ -1,19 +1,19 @@
 import os
 
-MOCK_RUN = bool(os.getenv("MOCK_RUN"))
-MOCK_ONE_MODEL = bool(os.getenv("MOCK_ONE_MODEL"))
-if MOCK_RUN:
+MOCK_RUN = os.getenv("MOCK_RUN")
+MOCK_ONE_MODEL = os.getenv("MOCK_ONE_MODEL")
+if MOCK_RUN == 'TRUE':
     NUM_TRAIN_EPOCHS = 3
     ANNOTATIONS_SCORE_THRESH = 0
 else:
-    NUM_TRAIN_EPOCHS = os.getenv("NUM_TRAIN_EPOCHS")
-    ANNOTATIONS_SCORE_THRESH = os.getenv("ANNOTATIONS_SCORE_THRESH")
+    NUM_TRAIN_EPOCHS = int(os.getenv("NUM_TRAIN_EPOCHS"))
+    ANNOTATIONS_SCORE_THRESH = float(os.getenv("ANNOTATIONS_SCORE_THRESH"))
 
 S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME")
 EXPERIMENT_NAME = os.getenv("EXPERIMENT_NAME")
 AWS_ACCESS_ID = os.getenv("AWS_ACCESS_ID")
 AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY")
-CREATE_IMAGES = bool(os.getenv("CREATE_IMAGES"))
+CREATE_IMAGES = os.getenv("CREATE_IMAGES")
 
 TRAIN_COMMAND = """cd {openpifpaf_path} && \
                    python -m openpifpaf.train \

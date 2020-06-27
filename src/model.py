@@ -76,7 +76,7 @@ class Model(object):
         mock_keypoints = None
         for idx, ann in enumerate(train_ann_data['annotations']):
             max_id = max(max_id, ann['id'])
-            if MOCK_RUN and mock_num_keypoints == 0:
+            if MOCK_RUN == 'TRUE' and mock_num_keypoints == 0:
                 mock_keypoints = ann['keypoints']
                 mock_num_keypoints = ann['num_keypoints']
         logging.info('Load original next gen annotations file for additional info')
@@ -95,7 +95,7 @@ class Model(object):
         for idx, ann in enumerate(new_annotations_data_filtered_by_score):
             logging.info('Adding annotation no.{idx} out of {total}'.format(idx=idx+1,
                                                                             total=total_new_annotations_filtered_count))
-            if MOCK_RUN and idx % 20 == 0:
+            if MOCK_RUN == 'TRUE' and idx % 20 == 0:
                 ann['num_keypoints'] = mock_num_keypoints
                 ann['keypoints'] = mock_keypoints
             else:
