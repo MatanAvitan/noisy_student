@@ -16,7 +16,7 @@ RUN sudo apt install -y --reinstall software-properties-common
 RUN sudo add-apt-repository ppa:deadsnakes/ppa
 
 RUN apt-get install -y \
-    python3-pip python3.6 python3.6-dev \
+    python3-pip python3.6 python-apt python3.6-dev  \
   && cd /usr/local/bin \
   && ln -s /usr/bin/python3.6 python \
     && ln -s /usr/bin/pip3 pip \
