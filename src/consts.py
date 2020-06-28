@@ -57,4 +57,4 @@ PREDICT_COMMAND = """cd {openpifpaf_path} && \
                         python -m openpifpaf.predict \
                             {images} \
                             --checkpoint {checkpoint} \
-                            --image-output {image_output_dir}"""
+                            --image-output {image_output}"""

@@ -31,6 +31,9 @@ logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
 tb_writer = SummaryWriter(os.path.join(OPENPIFPAF_PATH, 'tb_logs'))
 TB_IMAGE_OUTPUT_DIR_NAME = 'tb_image_output_dir'
 
+if not os.path.exists(os.path.join(OPENPIFPAF_PATH, TB_IMAGE_OUTPUT_DIR_NAME)):
+    os.mkdir(os.path.join(OPENPIFPAF_PATH, TB_IMAGE_OUTPUT_DIR_NAME))
+
 def create_results_dir_in_s3(experiment_name):
     s3 = boto3.client('s3',
                       aws_access_key_id=AWS_ACCESS_ID,
@@ -137,7 +140,7 @@ def main():
         if CREATE_IMAGES == 'TRUE':
             teacher.create_images_for_tb(experiment_name=EXPERIMENT_NAME,
                                          tb_writer=tb_writer,
-                                         tb_image_output_dir=TB_IMAGE_OUTPUT_DIR)
+                                         tb_image_output_dir=TB_IMAGE_OUTPUT_DIR_NAME)
 
     full_data_model = create_full_data_model_for_comparison(model_idx+1)
     full_data_model.fit()
@@ -148,7 +151,7 @@ def main():
     if CREATE_IMAGES == 'TRUE':
         teacher.create_images_for_tb(experiment_name=EXPERIMENT_NAME,
                                      tb_writer=tb_writer,
-                                     tb_image_output_dir=TB_IMAGE_OUTPUT_DIR)
+                                     tb_image_output_dir=TB_IMAGE_OUTPUT_DIR_NAME)
     tb_writer.close()
 
 if __name__ == '__main__':

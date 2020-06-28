@@ -216,11 +216,12 @@ class Model(object):
 
             images_paths = [os.path.join(self._val_image_dir, image_name) \
                             for image_name in random_images_names]
-            for image_path in images_paths:
+            for image_path, image_name in zip(images_paths, random_images_names):
+                image_output = os.path.join(tb_image_output_dir, image_name + '.predictions.png')
                 os.system(PREDICT_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
                                                  images=image_path,
                                                  checkpoint=curr_model,
-                                                 image_output_dir=tb_image_output_dir))
+                                                 image_output=image_output))
             for image_name in random_images_names:
                 curr_pred_image_path = os.path.join(OPENPIFPAF_PATH, tb_image_output_dir, image_name + '.predictions.png')
                 img = imread(curr_pred_image_path)
