@@ -10,7 +10,8 @@ from consts import (NUM_TRAIN_EPOCHS,
                     AWS_ACCESS_ID,
                     AWS_ACCESS_KEY,
                     MOCK_ONE_MODEL,
-                    CREATE_IMAGES)
+                    CREATE_IMAGES,
+                    MOCK_RUN)
 from data_consts import (STUDENT_TEACHER_LOOP,
                          ANNOTATIONS_DIR,
                          NEW_ANNOTATIONS_DIR,
@@ -39,9 +40,13 @@ def create_results_dir_in_s3(experiment_name):
     s3.put_object(Bucket=bucket_name, Key=directory_name, Body='')
 
 def create_full_data_model_for_comparison(model_idx):
+    if MOCK_RUN == 'TRUE':
+        full_train_num_train_epochs = 1
+    else:
+        full_train_num_train_epochs = 151
     full_data_model = Teacher(model_type='openpifpaf',
                               model_idx=model_idx,
-                              num_train_epochs=NUM_TRAIN_EPOCHS,
+                              num_train_epochs=full_train_num_train_epochs,
                               train_image_dir=TRAIN_IMAGE_DIR,
                               train_annotations=os.path.join(ANNOTATIONS_DIR,
                                                              ORIGINAL_ANNOTATIONS_DIR,
