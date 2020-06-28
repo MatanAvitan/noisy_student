@@ -144,12 +144,12 @@ def main():
 
     full_data_model = create_full_data_model_for_comparison(model_idx+1)
     full_data_model.fit()
-    teacher.create_val_score()
-    teacher.save_results(experiment_name=EXPERIMENT_NAME)
-    teacher.save_logs(experiment_name=EXPERIMENT_NAME)
-    teacher.save_model(experiment_name=EXPERIMENT_NAME)
+    full_data_model.create_val_score()
+    full_data_model.save_results(experiment_name=EXPERIMENT_NAME)
+    full_data_model.save_logs(experiment_name=EXPERIMENT_NAME)
+    full_data_model.save_model(experiment_name=EXPERIMENT_NAME)
     if CREATE_IMAGES == 'TRUE':
-        teacher.create_images_for_tb(experiment_name=EXPERIMENT_NAME,
+        full_data_model.create_images_for_tb(experiment_name=EXPERIMENT_NAME,
                                      tb_writer=tb_writer,
                                      tb_image_output_dir=TB_IMAGE_OUTPUT_DIR_NAME)
     tb_writer.close()
