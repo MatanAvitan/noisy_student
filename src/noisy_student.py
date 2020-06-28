@@ -94,12 +94,12 @@ def main():
     teacher.save_results(experiment_name=EXPERIMENT_NAME)
     teacher.save_logs(experiment_name=EXPERIMENT_NAME)
     teacher.save_model(experiment_name=EXPERIMENT_NAME)
-    if MOCK_ONE_MODEL == 'TRUE':
-        return
     if CREATE_IMAGES == 'TRUE':
         teacher.create_images_for_tb(experiment_name=EXPERIMENT_NAME,
                                      tb_writer=tb_writer,
                                      tb_image_output_dir=TB_IMAGE_OUTPUT_DIR_NAME)
+    if MOCK_ONE_MODEL == 'TRUE':
+        return
 
     for model_idx in range(initial_model_idx+1, STUDENT_TEACHER_LOOP):
         last_model_in_loop = model_idx == STUDENT_TEACHER_LOOP-1
