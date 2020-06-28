@@ -66,6 +66,7 @@ class Model(object):
         with open(new_data_eval_pred_file_path, 'r') as j:
             new_annotations_data = json.loads(j.read())
         logging.info('Filtering new annotation dict')
+        all_annotations_in_new_annotations_data = len(new_annotations_data)
         new_annotations_data_filtered_by_score = [ann for ann in new_annotations_data if ann['score'] >= thresh]
         logging.info('Loading train annotations')
         with open(os.path.join(OPENPIFPAF_PATH, self._train_annotations), 'r') as j:
@@ -91,6 +92,9 @@ class Model(object):
         logging.info('Create new annotations dict from new annotations')
         selected_ann_data = {'annotations': [], 'images': []}
         total_new_annotations_filtered_count = len(new_annotations_data_filtered_by_score)
+        logging.info('After filtering by thresh {thresh}, {count} annotations are selected as new images out of {all}'.format(thresh=thresh,
+                                                                                                                              count=total_new_annotations_filtered_count,
+                                                                                                                              all=all_annotations_in_new_annotations_data))
         added_images_ids = []
         for idx, ann in enumerate(new_annotations_data_filtered_by_score):
             logging.info('Adding annotation no.{idx} out of {total}'.format(idx=idx+1,
