@@ -40,7 +40,7 @@ sleep 2
 
 # create virtualenv
 sudo apt-get -y install virtualenv
-virtualenv -p python3 ~/.venvs/noisy_student_36
+virtualenv -p python3.6 ~/.venvs/noisy_student_36
 source ~/.venvs/noisy_student_36/bin/activate
 
 sleep 2
