@@ -41,7 +41,7 @@ If not, try to reboot the machine using the reboot command:
 8. cd to the noisy_student directory:
 `cd noisy_student`
 
-9. Create your AWS Credentials (AWS_ACCESS_ID and AWS_ACCESS_ID) - create them as local environment variables on your instance.
+9. Create your AWS Credentials (AWS_ACCESS_ID and AWS_ACCESS_KEY) - create them as local environment variables on your instance.
 
 10. There are 2 options for running the noisy_student algorithm: either docker or shell script.
 (When running in docker always use --env CREATE_IMAGES=FALSE since creating images does not work in docker environment )
