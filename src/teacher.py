@@ -1,5 +1,4 @@
-from model import Model
-import os
+from src.model import Model
 
 
 class Teacher(Model):
