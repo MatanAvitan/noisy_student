@@ -4,6 +4,8 @@ import logging
 import random
 import boto3
 from matplotlib.image import imread
+import torch
+import numpy as np
 from data_consts import OPENPIFPAF_PATH, MERGED_TRAIN_ANNOTATIONS_FILE_PREFIX
 from consts import (TRAIN_COMMAND,
                     EVAL_COMMAND,
@@ -229,7 +231,7 @@ class Model(object):
                 image_tb_file_name = 'Experiment {}'.format(experiment_name) + \
                                       ' ' + curr_model + \
                                       ' epoch {epoch}, image {image_name}'.format(epoch=epoch,
-                                                                                   image_name=curr_image_name)
+                                                                                   image_name=image_name)
                 tb_writer.add_image(image_tb_file_name, img)
             logging.info('Finished images predictions TB - epoch {epoch}'.format(epoch=epoch))
         logging.info('Finished image creation for TB of {model_idx} in S3'.format(model_idx=self._model_idx))
