@@ -2,9 +2,9 @@ import os
 import logging
 import boto3
 from torch.utils.tensorboard import SummaryWriter
-from student import Student
-from teacher import Teacher
-from consts import (NUM_TRAIN_EPOCHS,
+from src.student import Student
+from src.teacher import Teacher
+from src.consts import (NUM_TRAIN_EPOCHS,
                     S3_BUCKET_NAME,
                     EXPERIMENT_NAME,
                     AWS_ACCESS_ID,
@@ -12,7 +12,7 @@ from consts import (NUM_TRAIN_EPOCHS,
                     MOCK_ONE_MODEL,
                     CREATE_IMAGES,
                     MOCK_RUN)
-from data_consts import (STUDENT_TEACHER_LOOP,
+from src.data_consts import (STUDENT_TEACHER_LOOP,
                          ANNOTATIONS_DIR,
                          NEW_ANNOTATIONS_DIR,
                          TRAIN_IMAGE_DIR,
