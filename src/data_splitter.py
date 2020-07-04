@@ -1,5 +1,5 @@
 import os
-from src.data_consts import (TRAIN_SPLIT_PERCENTAGES,
+from data_consts import (TRAIN_SPLIT_PERCENTAGES,
                              STUDENT_TEACHER_LOOP,
                              COCOSPLIT_PATH,
                              ANNOTATIONS_DIR,

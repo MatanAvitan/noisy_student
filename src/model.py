@@ -6,8 +6,8 @@ import boto3
 from matplotlib.image import imread
 import torch
 import numpy as np
-from src.data_consts import OPENPIFPAF_PATH, MERGED_TRAIN_ANNOTATIONS_FILE_PREFIX
-from src.consts import (TRAIN_COMMAND,
+from data_consts import OPENPIFPAF_PATH, MERGED_TRAIN_ANNOTATIONS_FILE_PREFIX
+from consts import (TRAIN_COMMAND,
                         EVAL_COMMAND,
                         PREDICT_COMMAND,
                         ANNOTATIONS_SCORE_THRESH,
