@@ -54,6 +54,7 @@ class Model(object):
         """
         creates val score files for val data
         """
+        logging.info('Creating val scores of Model no.{model_idx}'.format(model_idx=self._model_idx))
         if metric == 'oks':
             checkpoint = self._model_output_file
             eval_process_return_value = os.system(EVAL_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
@@ -114,8 +115,6 @@ class Model(object):
                                                                                                                               all=all_annotations_in_new_annotations_data))
         added_images_ids = []
         for idx, ann in enumerate(new_annotations_data_filtered_by_score):
-            logging.info('Adding annotation no.{idx} out of {total}'.format(idx=idx+1,
-                                                                            total=total_new_annotations_filtered_count))
             if MOCK_RUN == 'TRUE' and idx % 20 == 0:
                 ann['num_keypoints'] = mock_num_keypoints
                 ann['keypoints'] = mock_keypoints
