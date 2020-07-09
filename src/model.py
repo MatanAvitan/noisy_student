@@ -1,7 +1,8 @@
 import os
 import json
-import logging
+import pandas as pd
 import random
+import logging
 import boto3
 from matplotlib.image import imread
 from data_consts import OPENPIFPAF_PATH, MERGED_TRAIN_ANNOTATIONS_FILE_PREFIX
@@ -65,9 +66,20 @@ class Model(object):
         new_data_eval_pred_file_path = os.path.join(OPENPIFPAF_PATH, self._new_data_eval_file + '.pred.json')
         with open(new_data_eval_pred_file_path, 'r') as j:
             new_annotations_data = json.loads(j.read())
-        logging.info('Filtering new annotation dict')
+
+        logging.info('Collecting annotations scores per image')
         all_annotations_in_new_annotations_data = len(new_annotations_data)
-        new_annotations_data_filtered_by_score = [ann for ann in new_annotations_data if ann['score'] >= thresh]
+        image_ann_scores = defaultdict(list)
+        for ann_data in new_annotations_data:
+            ann_score = ann_data['score']
+            image_ann_scores[ann_data['image_id']].append(ann_score)
+
+        logging.info('Filtering new annotations using the min score per image')
+        df_ann_scores = pd.DataFrame.from_dict(image_ann_scores,orient='index').transpose()
+        df_ann_scores_description = df_ann_scores.describe().T
+        images_ids_filtered_by_min_score = df_ann_scores_description.loc[df_ann_scores_description['min'] > thresh].index.values
+        new_annotations_data_filtered_by_score = [ann for ann in new_annotations_data if ann['image_id'] in images_ids_filtered_by_min_score]
+
         logging.info('Loading train annotations')
         with open(os.path.join(OPENPIFPAF_PATH, self._train_annotations), 'r') as j:
             train_ann_data = json.loads(j.read())
@@ -80,6 +92,7 @@ class Model(object):
             if MOCK_RUN == 'TRUE' and mock_num_keypoints == 0:
                 mock_keypoints = ann['keypoints']
                 mock_num_keypoints = ann['num_keypoints']
+
         logging.info('Load original next gen annotations file for additional info')
         next_gen_annotations_path = os.path.join(OPENPIFPAF_PATH, self._next_gen_annotations)
         with open(next_gen_annotations_path, 'r') as j:
@@ -89,6 +102,7 @@ class Model(object):
         for image in next_gen_annotations_data['images']:
             file_names[image['id']] = image.get('file_name')
             flickr_urls[image['id']] = image.get('flickr_url')
+
         logging.info('Create new annotations dict from new annotations')
         selected_ann_data = {'annotations': [], 'images': []}
         total_new_annotations_filtered_count = len(new_annotations_data_filtered_by_score)
