@@ -192,11 +192,18 @@ class Model(object):
         logging.info('Starting Saving Results of Model {model_idx} in S3'.format(model_idx=self._model_idx))
         eval_output_stats_file_name = self._eval_output_file + '.stats.json'
         new_data_eval_stats_file_name = self._new_data_eval_file + '.stats.json'
+        eval_output_pred_file_name = self._eval_output_file + '.pred.json'
+        new_data_eval_pred_file_name = self._new_data_eval_file + '.pred.json'
 
         eval_output_stats_file_path = os.path.join(OPENPIFPAF_PATH, eval_output_stats_file_name)
         new_data_eval_stats_file_path = os.path.join(OPENPIFPAF_PATH, new_data_eval_stats_file_name)
+        eval_output_pred_file_path = os.path.join(OPENPIFPAF_PATH, eval_output_pred_file_name)
+        new_data_eval_pred_file_path = os.path.join(OPENPIFPAF_PATH, new_data_eval_pred_file_name)
 
-        files = [(eval_output_stats_file_name, eval_output_stats_file_path), (new_data_eval_stats_file_name, new_data_eval_stats_file_path)]
+        files = [(eval_output_stats_file_name, eval_output_stats_file_path),
+                 (new_data_eval_stats_file_name, new_data_eval_stats_file_path),
+                 (eval_output_pred_file_name, eval_output_pred_file_path),
+                 (new_data_eval_pred_file_name, new_data_eval_pred_file_path)]
         s3 = boto3.resource('s3',
                             aws_access_key_id=AWS_ACCESS_ID,
                             aws_secret_access_key=AWS_ACCESS_KEY)
