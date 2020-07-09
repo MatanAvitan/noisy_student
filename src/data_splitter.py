@@ -47,7 +47,7 @@ def main():
     splitter = DataSplitter(annotation_file_path=os.path.join(ANNOTATIONS_DIR,ORIGINAL_ANNOTATIONS_DIR, ORIGINAL_TRAIN_ANNOTATION_FILE),
                             train_split_percentage=1,
                             train_output_file=os.path.join(ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR, ANNOTATIONS_FILE_FULL_MODEL),
-                            test_output_file=os.path.join(ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR, 'empty_annotations_file')
+                            test_output_file=os.path.join(ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR, 'empty_annotations_file'))
 
     splitter.split()
 
