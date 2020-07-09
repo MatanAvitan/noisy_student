@@ -13,9 +13,9 @@ from consts import (NUM_TRAIN_EPOCHS,
                     CREATE_IMAGES,
                     MOCK_RUN,
                     ANNOTATIONS_SCORE_INITIAL_THRESH,
-                    ANNOTATION_SCORE_DECREASE)
-from data_consts import (STUDENT_TEACHER_LOOP,
-                         ANNOTATIONS_DIR,
+                    ANNOTATION_SCORE_DECREASE,
+                    STUDENT_TEACHER_LOOP)
+from data_consts import (ANNOTATIONS_DIR,
                          NEW_ANNOTATIONS_DIR,
                          TRAIN_IMAGE_DIR,
                          ORIGINAL_ANNOTATIONS_DIR,
@@ -45,22 +45,19 @@ def create_results_dir_in_s3(experiment_name):
     s3.put_object(Bucket=bucket_name, Key=directory_name, Body='')
 
 def create_full_data_model_for_comparison(model_idx):
-    if MOCK_RUN == 'TRUE':
-        full_train_num_train_epochs = 1
-    else:
-        full_train_num_train_epochs = 151
     full_data_model = Teacher(model_type='openpifpaf',
                               model_idx=model_idx,
-                              num_train_epochs=full_train_num_train_epochs,
+                              num_train_epochs=NUM_TRAIN_EPOCHS,
                               train_image_dir=TRAIN_IMAGE_DIR,
                               train_annotations=os.path.join(ANNOTATIONS_DIR,
-                                                             ORIGINAL_ANNOTATIONS_DIR,
-                                                             ORIGINAL_TRAIN_ANNOTATION_FILE),
+                                                             NEW_ANNOTATIONS_DIR,
+                                                             ANNOTATIONS_FILE_FULL_MODEL),
                               val_image_dir=VAL_IMAGE_DIR,
                               val_annotations=os.path.join(ANNOTATIONS_DIR,
                                                            ORIGINAL_ANNOTATIONS_DIR,
                                                            ORIGINAL_VAL_ANNOTATION_FILE),
                               next_gen_annotations=None,
+                              second_next_gen_annotations=None,
                               full_data_model=True)
     return full_data_model
 
@@ -84,7 +81,11 @@ def main():
                       next_gen_annotations=os.path.join(ANNOTATIONS_DIR,
                                                         NEW_ANNOTATIONS_DIR,
                                                         '{prefix}_{model_idx}'.format(prefix=NEW_ANNOTATIONS_FILE_PREFIX,
-                                                                                      model_idx=initial_model_idx+1)))
+                                                                                      model_idx=initial_model_idx+1)),
+                      second_next_gen_annotations=os.path.join(ANNOTATIONS_DIR,
+                                                             NEW_ANNOTATIONS_DIR,
+                                                             '{prefix}_{model_idx}'.format(prefix=NEW_ANNOTATIONS_FILE_PREFIX,
+                                                                                           model_idx=initial_model_idx+2)))
 
     logging.info('********************************************************************')
     logging.info('*************************   Model No {model_idx}.    *************************'.format(model_idx=initial_model_idx))
@@ -126,7 +127,11 @@ def main():
                               val_annotations=os.path.join(ANNOTATIONS_DIR,
                                                            ORIGINAL_ANNOTATIONS_DIR,
                                                            ORIGINAL_VAL_ANNOTATION_FILE),
-                              next_gen_annotations=curr_next_gen_annotations)
+                              next_gen_annotations=curr_next_gen_annotations,
+                              second_next_gen_annotations=os.path.join(ANNOTATIONS_DIR,
+                                                                     NEW_ANNOTATIONS_DIR,
+                                                                     '{prefix}_{model_idx}'.format(prefix=NEW_ANNOTATIONS_FILE_PREFIX,
+                                                                                                   model_idx=model_idx+2)))
 
         logging.info('********************************************************************')
         logging.info('*************************   Model No {model_idx}.    *************************'.format(model_idx=model_idx))

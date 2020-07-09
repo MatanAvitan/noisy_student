@@ -16,7 +16,7 @@ from consts import (TRAIN_COMMAND,
 
 
 class Model(object):
-    def __init__(self, model_type, model_idx, num_train_epochs, train_image_dir, train_annotations, val_image_dir, val_annotations, next_gen_annotations, full_data_model=False):
+    def __init__(self, model_type, model_idx, num_train_epochs, train_image_dir, train_annotations, val_image_dir, val_annotations, next_gen_annotations, second_next_gen_annotations, full_data_model=False):
         self._model_type = model_type
         self._model_idx = model_idx
         if full_data_model:
@@ -36,6 +36,7 @@ class Model(object):
         self._val_image_dir = val_image_dir
         self._val_annotations = val_annotations
         self._next_gen_annotations = next_gen_annotations
+        self._second_next_gen_annotations = second_next_gen_annotations
 
     def fit(self):
         train_process_return_value = os.system(TRAIN_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
@@ -77,6 +78,7 @@ class Model(object):
         df_ann_scores = pd.DataFrame.from_dict(image_ann_scores,orient='index').transpose()
         df_ann_scores_description = df_ann_scores.describe().T
         images_ids_filtered_by_min_score = df_ann_scores_description.loc[df_ann_scores_description['min'] > thresh].index.values
+        self.images_ids_for_next_gen_test = df_ann_scores_description.loc[df_ann_scores_description['min'] <= thresh].index.values
         new_annotations_data_filtered_by_score = [ann for ann in new_annotations_data if ann['image_id'] in images_ids_filtered_by_min_score]
 
         logging.info('Loading train annotations')
@@ -130,6 +132,23 @@ class Model(object):
                 added_images_ids.append(ann['image_id'])
         self._selected_ann_data = selected_ann_data
 
+    def create_next_gen_test_annotations_file(self):
+        logging.info('Create next gen annotations file for following model')
+        next_gen_annotations_path = os.path.join(OPENPIFPAF_PATH, self._next_gen_annotations)
+        with open(next_gen_annotations_path, 'r') as j:
+            next_gen_annotations_data = json.loads(j.read())
+        selected_ann_data = {'annotations': [], 'images': []}
+        for image in next_gen_annotations_data['images']:
+            if image['id'] in self.images_ids_for_next_gen_test:
+                selected_ann_data['images'].append(image)
+        for ann in next_gen_annotations_data['annotations']:
+            if ann['image_id'] in self.images_ids_for_next_gen_test:
+                selected_ann_data['annotations'].append(ann)
+        next_gen_test_annotations_file = os.path.join(OPENPIFPAF_PATH, self._second_next_gen_annotations)
+        logging.info('Dumping Next Gen Test File: {next_gen_test_annotations_file}'.format(next_gen_test_annotations_file=next_gen_test_annotations_file))
+        with open(next_gen_test_annotations_file, 'w') as outfile:
+            json.dump(selected_ann_data, outfile)
+
     def merge_annotations(self):
         with open(os.path.join(OPENPIFPAF_PATH, self._train_annotations), 'r') as j:
             train_ann_data = json.loads(j.read())
@@ -163,6 +182,7 @@ class Model(object):
             self.select_new_images(thresh=thresh)
             logging.info('merging annotations')
             self.merge_annotations()
+            self.create_next_gen_test_annotations_file()
         else:
             logging.info('next_gen_annotations file does not exist')
 
