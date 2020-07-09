@@ -9,7 +9,6 @@ from data_consts import OPENPIFPAF_PATH, MERGED_TRAIN_ANNOTATIONS_FILE_PREFIX
 from consts import (TRAIN_COMMAND,
                     EVAL_COMMAND,
                     PREDICT_COMMAND,
-                    ANNOTATIONS_SCORE_THRESH,
                     MOCK_RUN,
                     S3_BUCKET_NAME,
                     AWS_ACCESS_ID,
@@ -61,7 +60,7 @@ class Model(object):
                                                                             eval_output_file=self._eval_output_file))
             logging.info('eval_process_return_value:{return_value}'.format(return_value=eval_process_return_value))
 
-    def select_new_images(self, thresh=ANNOTATIONS_SCORE_THRESH):
+    def select_new_images(self, thresh):
         logging.info('Loading new annotation file created by teacher')
         new_data_eval_pred_file_path = os.path.join(OPENPIFPAF_PATH, self._new_data_eval_file + '.pred.json')
         with open(new_data_eval_pred_file_path, 'r') as j:
@@ -149,7 +148,7 @@ class Model(object):
             json.dump(train_ann_data, outfile)
         self._merged_annotations_path = merged_file_name
 
-    def create_new_data_scores_and_annotations(self):
+    def create_new_data_scores_and_annotations(self, thresh):
         """
         Creates next gen annotations and merges them with train annotations
         """
@@ -161,7 +160,7 @@ class Model(object):
                                                 eval_output_file=self._new_data_eval_file))
             logging.info('eval_process_new_data_return_value:{return_value}'.format(return_value=eval_process_new_data_return_value))
             logging.info('select new images')
-            self.select_new_images()
+            self.select_new_images(thresh=thresh)
             logging.info('merging annotations')
             self.merge_annotations()
         else:

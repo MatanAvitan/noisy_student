@@ -11,7 +11,9 @@ from consts import (NUM_TRAIN_EPOCHS,
                     AWS_ACCESS_KEY,
                     MOCK_ONE_MODEL,
                     CREATE_IMAGES,
-                    MOCK_RUN)
+                    MOCK_RUN,
+                    ANNOTATIONS_SCORE_INITIAL_THRESH,
+                    ANNOTATION_SCORE_DECREASE)
 from data_consts import (STUDENT_TEACHER_LOOP,
                          ANNOTATIONS_DIR,
                          NEW_ANNOTATIONS_DIR,
@@ -64,7 +66,9 @@ def create_full_data_model_for_comparison(model_idx):
 
 def main():
     create_results_dir_in_s3(experiment_name=EXPERIMENT_NAME)
+    # variables: initial_model_idx, curr_thresh
     initial_model_idx = 0
+    curr_thresh = ANNOTATIONS_SCORE_INITIAL_THRESH
     teacher = Teacher(model_type='openpifpaf',
                       model_idx=initial_model_idx,
                       num_train_epochs=NUM_TRAIN_EPOCHS,
@@ -90,7 +94,8 @@ def main():
     logging.info('Creating Validation Scores to Model no.{model_idx}'.format(model_idx=initial_model_idx))
     teacher.create_val_score()
     logging.info('Creating New data Scores and New Annotations to Model no.{model_idx}'.format(model_idx=initial_model_idx))
-    teacher.create_new_data_scores_and_annotations()
+    teacher.create_new_data_scores_and_annotations(thresh=curr_thresh)
+    curr_thresh = max(0, curr_thresh - ANNOTATION_SCORE_DECREASE)
     teacher.save_results(experiment_name=EXPERIMENT_NAME)
     teacher.save_logs(experiment_name=EXPERIMENT_NAME)
     teacher.save_model(experiment_name=EXPERIMENT_NAME)
@@ -133,7 +138,8 @@ def main():
         teacher.create_val_score()
         if not last_model_in_loop:
             logging.info('Creating New data Scores and New Annotations to Model no.{model_idx}'.format(model_idx=model_idx))
-            teacher.create_new_data_scores_and_annotations()
+            teacher.create_new_data_scores_and_annotations(thresh=curr_thresh)
+            curr_thresh = max(0, curr_thresh - ANNOTATION_SCORE_DECREASE)
         teacher.save_results(experiment_name=EXPERIMENT_NAME)
         teacher.save_logs(experiment_name=EXPERIMENT_NAME)
         teacher.save_model(experiment_name=EXPERIMENT_NAME)
