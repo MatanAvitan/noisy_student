@@ -40,8 +40,18 @@ class Model(object):
         self._val_annotations = val_annotations
         self._next_gen_annotations = next_gen_annotations
         self._second_next_gen_annotations = second_next_gen_annotations
+        self._selected_ann_data = None
+
+    def get_images_count_in_train_annotations_file(self):
+        logging.info('Loading train annotations for counting images')
+        with open(os.path.join(OPENPIFPAF_PATH, self._train_annotations), 'r') as j:
+            train_ann_data = json.loads(j.read())
+        images_count = len(train_ann_data['images'])
+        logging.info('Threre are {images_count} images in train annotations file'.format(images_count=images_count))
+        return images_count
 
     def fit(self):
+        train_images_count = self.get_images_count_in_train_annotations_file()
         train_process_return_value = os.system(TRAIN_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
                                                                     num_train_epochs=self._num_train_epochs,
                                                                     train_image_dir=self._train_image_dir,
@@ -49,7 +59,9 @@ class Model(object):
                                                                     val_image_dir=self._val_image_dir,
                                                                     val_annotations=self._val_annotations,
                                                                     model_output_file=self._model_output_file))
-        logging.info('train_process_return_value:{return_value}'.format(return_value=train_process_return_value))
+        logging.info('train process of Model no. {model_idx} with {train_images_count} train images return value:{return_value}'.format(model_idx=self._model_idx,
+                                                                                                                                        train_images_count=train_images_count,
+                                                                                                                                        return_value=train_process_return_value))
 
     def create_val_score(self, metric='oks'):
         """
@@ -111,9 +123,11 @@ class Model(object):
         logging.info('Create new annotations dict from new annotations')
         selected_ann_data = {'annotations': [], 'images': []}
         total_new_annotations_filtered_count = len(new_annotations_data_filtered_by_score)
-        logging.info('After filtering by thresh {thresh}, {count} annotations are selected as new images out of {all}'.format(thresh=thresh,
-                                                                                                                              count=total_new_annotations_filtered_count,
-                                                                                                                              all=all_annotations_in_new_annotations_data))
+        total_new_images_filtered_count = len(images_ids_filtered_by_min_score)
+        logging.info('After filtering by thresh {thresh}, {count_annotations} annotations in {count_images} images are selected as new images out of {all} annotations'.format(thresh=thresh,
+                                                                                                                                                                               count_annotations=total_new_annotations_filtered_count,
+                                                                                                                                                                               count_images = total_new_images_filtered_count,
+                                                                                                                                                                               all=all_annotations_in_new_annotations_data))
         added_images_ids = []
         for idx, ann in enumerate(new_annotations_data_filtered_by_score):
             if MOCK_RUN == 'TRUE' and idx % 20 == 0:
@@ -157,14 +171,15 @@ class Model(object):
     def merge_annotations(self):
         with open(os.path.join(OPENPIFPAF_PATH, self._train_annotations), 'r') as j:
             train_ann_data = json.loads(j.read())
-        for key, value in train_ann_data.items():
-            logging.info('merging key: {key}'.format(key=key))
-            selected_ann_value = self._selected_ann_data.get(key)
-            if selected_ann_value:
-                if isinstance(selected_ann_value, list):
-                    value.extend(selected_ann_value)
-                else :
-                    value.append(selected_ann_value)
+        if self._selected_ann_data:
+            for key, value in train_ann_data.items():
+                logging.info('merging key: {key}'.format(key=key))
+                selected_ann_value = self._selected_ann_data.get(key)
+                if selected_ann_value:
+                    if isinstance(selected_ann_value, list):
+                        value.extend(selected_ann_value)
+                    else :
+                        value.append(selected_ann_value)
         merged_file_name = os.path.join(OPENPIFPAF_PATH, '{prefix}_{model_idx}'.format(prefix=MERGED_TRAIN_ANNOTATIONS_FILE_PREFIX,
                                                                                        model_idx=self._model_idx+1))
         logging.info('Dumping File: {merged_file_name}'.format(merged_file_name=merged_file_name))
@@ -185,11 +200,13 @@ class Model(object):
             logging.info('eval_process_new_data_return_value:{return_value}'.format(return_value=eval_process_new_data_return_value))
             logging.info('select new images')
             self.select_new_images(thresh=thresh)
-            logging.info('merging annotations')
+            logging.info('Merging annotations - creating annotation file for next generation')
             self.merge_annotations()
             self.create_next_gen_test_annotations_file()
         else:
-            logging.info('next_gen_annotations file does not exist')
+            logging.info('next_gen_annotations file does not exist - no more additional images for training')
+            logging.info('Creating annotation file for next generation - consists of all train images of prev generation')
+            self.merge_annotations()
 
     def save_results(self, experiment_name):
         logging.info('Starting Saving Results of Model {model_idx} in S3'.format(model_idx=self._model_idx))
