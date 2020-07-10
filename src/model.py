@@ -7,6 +7,7 @@ import boto3
 from matplotlib.image import imread
 import torch
 import numpy as np
+from collections import defaultdict
 from data_consts import OPENPIFPAF_PATH, MERGED_TRAIN_ANNOTATIONS_FILE_PREFIX
 from consts import (TRAIN_COMMAND,
                     EVAL_COMMAND,
