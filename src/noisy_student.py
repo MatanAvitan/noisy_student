@@ -24,7 +24,8 @@ from data_consts import (ANNOTATIONS_DIR,
                          VAL_IMAGE_DIR,
                          OPENPIFPAF_PATH,
                          NEW_ANNOTATIONS_FILE_PREFIX,
-                         MERGED_TRAIN_ANNOTATIONS_FILE_PREFIX)
+                         MERGED_TRAIN_ANNOTATIONS_FILE_PREFIX,
+                         ANNOTATIONS_FILE_FULL_MODEL)
 
 logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
                     level=logging.DEBUG,
