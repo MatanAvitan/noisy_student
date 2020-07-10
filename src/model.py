@@ -136,20 +136,23 @@ class Model(object):
 
     def create_next_gen_test_annotations_file(self):
         logging.info('Create next gen annotations file for following model')
-        next_gen_annotations_path = os.path.join(OPENPIFPAF_PATH, self._next_gen_annotations)
-        with open(next_gen_annotations_path, 'r') as j:
-            next_gen_annotations_data = json.loads(j.read())
-        selected_ann_data = {'annotations': [], 'images': []}
-        for image in next_gen_annotations_data['images']:
-            if image['id'] in self.images_ids_for_next_gen_test:
-                selected_ann_data['images'].append(image)
-        for ann in next_gen_annotations_data['annotations']:
-            if ann['image_id'] in self.images_ids_for_next_gen_test:
-                selected_ann_data['annotations'].append(ann)
-        next_gen_test_annotations_file = os.path.join(OPENPIFPAF_PATH, self._second_next_gen_annotations)
-        logging.info('Dumping Next Gen Test File: {next_gen_test_annotations_file}'.format(next_gen_test_annotations_file=next_gen_test_annotations_file))
-        with open(next_gen_test_annotations_file, 'w') as outfile:
-            json.dump(selected_ann_data, outfile)
+        if self.images_ids_for_next_gen_test:
+            next_gen_annotations_path = os.path.join(OPENPIFPAF_PATH, self._next_gen_annotations)
+            with open(next_gen_annotations_path, 'r') as j:
+                next_gen_annotations_data = json.loads(j.read())
+            selected_ann_data = {'annotations': [], 'images': []}
+            for image in next_gen_annotations_data['images']:
+                if image['id'] in self.images_ids_for_next_gen_test:
+                    selected_ann_data['images'].append(image)
+            for ann in next_gen_annotations_data['annotations']:
+                if ann['image_id'] in self.images_ids_for_next_gen_test:
+                    selected_ann_data['annotations'].append(ann)
+            next_gen_test_annotations_file = os.path.join(OPENPIFPAF_PATH, self._second_next_gen_annotations)
+            logging.info('Dumping Next Gen Test File: {next_gen_test_annotations_file}'.format(next_gen_test_annotations_file=next_gen_test_annotations_file))
+            with open(next_gen_test_annotations_file, 'w') as outfile:
+                json.dump(selected_ann_data, outfile)
+        else:
+            logging.info('No annotations left for next gen')
 
     def merge_annotations(self):
         with open(os.path.join(OPENPIFPAF_PATH, self._train_annotations), 'r') as j:
