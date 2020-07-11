@@ -10,7 +10,8 @@ import numpy as np
 from collections import defaultdict
 from data_consts import OPENPIFPAF_PATH, MERGED_TRAIN_ANNOTATIONS_FILE_PREFIX
 from consts import (TRAIN_COMMAND,
-                    EVAL_COMMAND,
+                    EVAL_VAL_COMMAND,
+                    EVAL_OTHER_COMMAND,
                     PREDICT_COMMAND,
                     MOCK_RUN,
                     S3_BUCKET_NAME,
@@ -70,7 +71,7 @@ class Model(object):
         logging.info('Creating val scores of Model no.{model_idx}'.format(model_idx=self._model_idx))
         if metric == 'oks':
             checkpoint = self._model_output_file
-            eval_process_return_value = os.system(EVAL_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
+            eval_process_return_value = os.system(EVAL_VAL_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
                                                                             model_output_file=checkpoint,
                                                                             dataset_image_dir=self._val_image_dir,
                                                                             dataset_annotations=self._val_annotations,
@@ -192,7 +193,7 @@ class Model(object):
         Creates next gen annotations and merges them with train annotations
         """
         if self._next_gen_annotations is not None and os.path.exists(self._next_gen_annotations):
-            eval_process_new_data_return_value = os.system(EVAL_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
+            eval_process_new_data_return_value = os.system(EVAL_OTHER_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
                                                 model_output_file=self._model_output_file,
                                                 dataset_image_dir=self._train_image_dir,
                                                 dataset_annotations=self._next_gen_annotations,

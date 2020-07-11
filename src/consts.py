@@ -42,7 +42,20 @@ TRAIN_COMMAND = """cd {openpifpaf_path} && \
                        --cocokp-val-annotations {val_annotations} \
                        --output={model_output_file}"""
 
-EVAL_COMMAND = """cd {openpifpaf_path} && \
+EVAL_VAL_COMMAND = """cd {openpifpaf_path} && \
+                        python -m openpifpaf.eval_coco \
+                            --checkpoint {model_output_file} \
+                            --long-edge=641 \
+                            --write-predictions \
+                            --loader-workers 16 \
+                            --decoder-workers 16 \
+                            --batch-size 16 \
+                            --dataset other-val \
+                            --dataset-image-dir {dataset_image_dir} \
+                            --dataset-annotations {dataset_annotations} \
+                            --output {eval_output_file}"""
+
+EVAL_OTHER_COMMAND = """cd {openpifpaf_path} && \
                         python -m openpifpaf.eval_coco \
                             --checkpoint {model_output_file} \
                             --long-edge=641 \
