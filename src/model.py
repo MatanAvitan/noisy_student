@@ -93,8 +93,8 @@ class Model(object):
         logging.info('Filtering new annotations using the min score per image')
         df_ann_scores = pd.DataFrame.from_dict(image_ann_scores,orient='index').transpose()
         df_ann_scores_description = df_ann_scores.describe().T
-        images_ids_filtered_by_min_score = df_ann_scores_description.loc[df_ann_scores_description['min'] > thresh].index.values
-        self.images_ids_for_next_gen_test = df_ann_scores_description.loc[df_ann_scores_description['min'] <= thresh].index.values
+        images_ids_filtered_by_min_score = list(df_ann_scores_description.loc[df_ann_scores_description['min'] > thresh].index.values)
+        self.images_ids_for_next_gen_test = list(df_ann_scores_description.loc[df_ann_scores_description['min'] <= thresh].index.values)
         new_annotations_data_filtered_by_score = [ann for ann in new_annotations_data if ann['image_id'] in images_ids_filtered_by_min_score]
 
         logging.info('Loading train annotations')
