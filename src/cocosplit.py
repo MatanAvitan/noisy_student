@@ -42,12 +42,17 @@ def main(args):
         if args.having_annotations:
             images = funcy.lremove(lambda i: i['id'] not in images_with_annotations, images)
 
-        x, y = train_test_split(images, train_size=args.split, random_state=0)
-
-        save_coco(args.train, info, licenses, x, filter_annotations(annotations, x), categories)
-        save_coco(args.test, info, licenses, y, filter_annotations(annotations, y), categories)
-
-        print("Saved {} entries in {} and {} in {}".format(len(x), args.train, len(y), args.test))
+        if args.split == 1:
+            save_coco(args.train, info, licenses, images, filter_annotations(annotations, images), categories)
+            print("Saved {} entries in {}".format(len(images), args.train))
+        elif args.split == 0:
+            save_coco(args.test, info, licenses, images, filter_annotations(annotations, images), categories)
+            print("Saved {} entries in {}".format(len(images), args.test))
+        else:
+            x, y = train_test_split(images, train_size=args.split, random_state=0)
+            save_coco(args.train, info, licenses, x, filter_annotations(annotations, x), categories)
+            save_coco(args.test, info, licenses, y, filter_annotations(annotations, y), categories)
+            print("Saved {} entries in {} and {} in {}".format(len(x), args.train, len(y), args.test))
 
 
 if __name__ == "__main__":

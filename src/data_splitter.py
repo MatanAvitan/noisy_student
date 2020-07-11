@@ -45,7 +45,7 @@ def main():
 
     # create a file for full model (filters annottations)
     splitter = DataSplitter(annotation_file_path=os.path.join(ANNOTATIONS_DIR,ORIGINAL_ANNOTATIONS_DIR, ORIGINAL_TRAIN_ANNOTATION_FILE),
-                            train_split_percentage=0.99,
+                            train_split_percentage=1,
                             train_output_file=os.path.join(ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR, ANNOTATIONS_FILE_FULL_MODEL),
                             test_output_file=os.path.join(ANNOTATIONS_DIR, NEW_ANNOTATIONS_DIR, 'empty_annotations_file'))
 
