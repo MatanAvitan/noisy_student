@@ -28,7 +28,7 @@ from data_consts import (ANNOTATIONS_DIR,
                          ANNOTATIONS_FILE_FULL_MODEL)
 
 logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
-                    level=logging.DEBUG,
+                    level=logging.INFO,
                     datefmt='%Y-%m-%d %H:%M:%S')
 
 tb_writer = SummaryWriter(os.path.join(OPENPIFPAF_PATH, 'tb_logs'))
