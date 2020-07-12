@@ -162,6 +162,34 @@ class Model(object):
             for ann in next_gen_annotations_data['annotations']:
                 if ann['image_id'] in self.images_ids_for_next_gen_test:
                     selected_ann_data['annotations'].append(ann)
+            selected_ann_data["categories"] = [
+                                                {
+                                                    "supercategory": "person",
+                                                    "id": 1,
+                                                    "name": "person",
+                                                    "keypoints": ["nose", "left_eye", "right_eye", "left_ear", "right_ear", "left_shoulder", "right_shoulder", "left_elbow", "right_elbow", "left_wrist", "right_wrist", "left_hip", "right_hip", "left_knee", "right_knee", "left_ankle", "right_ankle"],
+                                                    "skeleton": [
+                                                        [16, 14],
+                                                        [14, 12],
+                                                        [17, 15],
+                                                        [15, 13],
+                                                        [12, 13],
+                                                        [6, 12],
+                                                        [7, 13],
+                                                        [6, 7],
+                                                        [6, 8],
+                                                        [7, 9],
+                                                        [8, 10],
+                                                        [9, 11],
+                                                        [2, 3],
+                                                        [1, 2],
+                                                        [1, 3],
+                                                        [2, 4],
+                                                        [3, 5],
+                                                        [4, 6],
+                                                        [5, 7]
+                                                    ]
+                                                }]
             next_gen_test_annotations_file = os.path.join(OPENPIFPAF_PATH, self._second_next_gen_annotations)
             logging.info('Dumping Next Gen Test File: {next_gen_test_annotations_file}'.format(next_gen_test_annotations_file=next_gen_test_annotations_file))
             with open(next_gen_test_annotations_file, 'w') as outfile:
