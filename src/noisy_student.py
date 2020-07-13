@@ -45,6 +45,20 @@ def create_results_dir_in_s3(experiment_name):
     directory_name = experiment_name + '/'
     s3.put_object(Bucket=bucket_name, Key=directory_name, Body='')
 
+def upload_tb_logs_to_s3(experiment_name):
+    logging.info('Uploading TB Logs Dir to S3 for Experiment {experiment_name}'.format(experiment_name=experiment_name))
+    tb_logs_path = os.path.join(OPENPIFPAF_PATH, 'tb_logs')
+    s3 = boto3.resource('s3',
+                        aws_access_key_id=AWS_ACCESS_ID,
+                        aws_secret_access_key=AWS_ACCESS_KEY)
+    for root,dirs,files in os.walk(tb_logs_path):
+        for file in files:
+            filepath = os.path.join(root, file)
+            if os.path.exists(filepath):
+                logging.info('Uploading to Bucket {}, Experiment {}, Filename {}'.format(S3_BUCKET_NAME, experiment_name, file))
+                s3.meta.client.upload_file(filepath, S3_BUCKET_NAME, os.path.join(experiment_name, 'tb_logs', file))
+                logging.info('Finished Saving TB Logs File {filename} in S3'.format(filename=file))
+
 def create_full_data_model_for_comparison(model_idx):
     full_data_model = Teacher(model_type='openpifpaf',
                               model_idx=model_idx,
@@ -165,6 +179,7 @@ def main():
                                      tb_writer=tb_writer,
                                      tb_image_output_dir=TB_IMAGE_OUTPUT_DIR_NAME)
     tb_writer.close()
+    upload_tb_logs_to_s3(experiment_name=EXPERIMENT_NAME)
 
 if __name__ == '__main__':
     main()

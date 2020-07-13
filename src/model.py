@@ -231,11 +231,13 @@ class Model(object):
             self.select_new_images(thresh=thresh)
             logging.info('Merging annotations - creating annotation file for next generation')
             self.merge_annotations()
+            self.save_annotations()
             self.create_next_gen_test_annotations_file()
         else:
             logging.info('next_gen_annotations file does not exist - no more additional images for training')
             logging.info('Creating annotation file for next generation - consists of all train images of prev generation')
             self.merge_annotations()
+            self.save_annotations()
 
     def save_results(self, experiment_name):
         logging.info('Starting Saving Results of Model {model_idx} in S3'.format(model_idx=self._model_idx))
@@ -287,6 +289,19 @@ class Model(object):
             logging.info('Uploading to Bucket {}, Experiment {}, Filename {}'.format(S3_BUCKET_NAME, experiment_name, filename))
             s3.meta.client.upload_file(filepath, S3_BUCKET_NAME, os.path.join(experiment_name,filename))
         logging.info('Finished Saving Model {model_idx} in S3'.format(model_idx=self._model_idx))
+
+    def save_annotations(self, experiment_name):
+        logging.info('Starting Saving Annotations {model_idx} in S3'.format(model_idx=self._model_idx))
+        filename = '{prefix}_{model_idx}'.format(prefix=MERGED_TRAIN_ANNOTATIONS_FILE_PREFIX,
+                                                 model_idx=self._model_idx+1)
+        filepath = os.path.join(OPENPIFPAF_PATH, filename)
+        s3 = boto3.resource('s3',
+                            aws_access_key_id=AWS_ACCESS_ID,
+                            aws_secret_access_key=AWS_ACCESS_KEY)
+        if os.path.exists(filepath):
+            logging.info('Uploading to Bucket {}, Experiment {}, Filename {}'.format(S3_BUCKET_NAME, experiment_name, filename))
+            s3.meta.client.upload_file(filepath, S3_BUCKET_NAME, os.path.join(experiment_name,filename))
+        logging.info('Finished Saving Annotations File {filename} in S3'.format(filename=filename))
 
     def create_images_for_tb(self, experiment_name, tb_writer, tb_image_output_dir):
         logging.info('Starting image creation for TB of {model_idx} in S3'.format(model_idx=self._model_idx))
