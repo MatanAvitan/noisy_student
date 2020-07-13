@@ -111,7 +111,7 @@ def main():
     teacher.create_val_score()
     logging.info('Creating New data Scores and New Annotations to Model no.{model_idx}'.format(model_idx=initial_model_idx))
     teacher.create_new_data_scores_and_annotations(thresh=curr_thresh)
-    curr_thresh = max(0, curr_thresh - ANNOTATION_SCORE_DECREASE)
+    curr_thresh = round(max(0, curr_thresh - ANNOTATION_SCORE_DECREASE), 3)
     teacher.save_results(experiment_name=EXPERIMENT_NAME)
     teacher.save_logs(experiment_name=EXPERIMENT_NAME)
     teacher.save_model(experiment_name=EXPERIMENT_NAME)
@@ -159,7 +159,7 @@ def main():
         if not last_model_in_loop:
             logging.info('Creating New data Scores and New Annotations to Model no.{model_idx}'.format(model_idx=model_idx))
             teacher.create_new_data_scores_and_annotations(thresh=curr_thresh)
-            curr_thresh = max(0, curr_thresh - ANNOTATION_SCORE_DECREASE)
+            curr_thresh = round(max(0, curr_thresh - ANNOTATION_SCORE_DECREASE), 3)
         teacher.save_results(experiment_name=EXPERIMENT_NAME)
         teacher.save_logs(experiment_name=EXPERIMENT_NAME)
         teacher.save_model(experiment_name=EXPERIMENT_NAME)
