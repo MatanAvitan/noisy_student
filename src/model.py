@@ -9,8 +9,7 @@ import torch
 import numpy as np
 from collections import defaultdict
 from data_consts import OPENPIFPAF_PATH, MERGED_TRAIN_ANNOTATIONS_FILE_PREFIX
-from consts import (TRAIN_COMMAND,
-                    EVAL_VAL_COMMAND,
+from consts import (EVAL_VAL_COMMAND,
                     EVAL_OTHER_COMMAND,
                     PREDICT_COMMAND,
                     MOCK_RUN,
