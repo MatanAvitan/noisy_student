@@ -60,8 +60,8 @@ If not, try to reboot the machine using the reboot command:
                  --env MOCK_RUN=FALSE \
                  --env MOCK_ONE_MODEL=FALSE \
                  --env CREATE_IMAGES=FALSE \
-                 --env NUM_TRAIN_EPOCHS=300 \
-                 --env ANNOTATIONS_SCORE_INITIAL_THRESH=0.7 \
+                 --env NUM_TRAIN_EPOCHS=140 \
+                 --env ANNOTATIONS_SCORE_INITIAL_THRESH=0.65 \
                  --env S3_BUCKET_NAME=<your bucket name> \
                  --env EXPERIMENT_NAME=<your experiment name> \
                  -p 6006:6006 \
@@ -115,7 +115,7 @@ And in your local machine run the following to forward the port: `ssh -i <your a
 20. Create additional environment variables, depending on your run configuration, for example for a full mock run (including creating images):
 `export S3_BUCKET_NAME=<your bucket name> ; export EXPERIMENT_NAME=<your experiment name> ; export MOCK_RUN=TRUE ; export MOCK_ONE_MODEL=FALSE; export CREATE_IMAGES=FALSE`
 And for a full run :
-`export S3_BUCKET_NAME=<your bucket name> ; export EXPERIMENT_NAME=<your experiment name> ; export MOCK_RUN=FALSE ; export MOCK_ONE_MODEL=FALSE; export CREATE_IMAGES=FALSE; export ANNOTATIONS_SCORE_INITIAL_THRESH=0.7 ; export NUM_TRAIN_EPOCHS=300`
+`export S3_BUCKET_NAME=<your bucket name> ; export EXPERIMENT_NAME=<your experiment name> ; export MOCK_RUN=FALSE ; export MOCK_ONE_MODEL=FALSE; export CREATE_IMAGES=FALSE; export ANNOTATIONS_SCORE_INITIAL_THRESH=0.65 ; export NUM_TRAIN_EPOCHS=140`
 
 21. run: `./install_collect_data.sh`
 
