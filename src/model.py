@@ -52,17 +52,7 @@ class Model(object):
         return images_count
 
     def fit(self):
-        train_images_count = self.get_images_count_in_train_annotations_file()
-        train_process_return_value = os.system(TRAIN_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
-                                                                    num_train_epochs=self._num_train_epochs,
-                                                                    train_image_dir=self._train_image_dir,
-                                                                    train_annotations=self._train_annotations,
-                                                                    val_image_dir=self._val_image_dir,
-                                                                    val_annotations=self._val_annotations,
-                                                                    model_output_file=self._model_output_file))
-        logging.info('train process of Model no. {model_idx} with {train_images_count} train images return value:{return_value}'.format(model_idx=self._model_idx,
-                                                                                                                                        train_images_count=train_images_count,
-                                                                                                                                        return_value=train_process_return_value))
+        pass
 
     def create_val_score(self, metric='oks'):
         """
