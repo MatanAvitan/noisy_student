@@ -231,13 +231,11 @@ class Model(object):
             self.select_new_images(thresh=thresh)
             logging.info('Merging annotations - creating annotation file for next generation')
             self.merge_annotations()
-            self.save_annotations()
             self.create_next_gen_test_annotations_file()
         else:
             logging.info('next_gen_annotations file does not exist - no more additional images for training')
             logging.info('Creating annotation file for next generation - consists of all train images of prev generation')
             self.merge_annotations()
-            self.save_annotations()
 
     def save_results(self, experiment_name):
         logging.info('Starting Saving Results of Model {model_idx} in S3'.format(model_idx=self._model_idx))
