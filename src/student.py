@@ -18,6 +18,8 @@ class Student(Model):
                                                                     val_image_dir=self._val_image_dir,
                                                                     val_annotations=self._val_annotations,
                                                                     model_output_file=self._model_output_file))
+        if train_process_return_value != 0:
+            raise ValueError('Training Student failed')
         logging.info('train process of Model no. {model_idx} with {train_images_count} train images return value:{return_value}'.format(model_idx=self._model_idx,
                                                                                                                                         train_images_count=train_images_count,
                                                                                                                                         return_value=train_process_return_value))

@@ -65,6 +65,8 @@ class Model(object):
                                                                             dataset_image_dir=self._val_image_dir,
                                                                             dataset_annotations=self._val_annotations,
                                                                             eval_output_file=self._eval_output_file))
+            if eval_process_return_value != 0:
+                raise ValueError('Could not create val score - Eval of val failed')
             logging.info('eval_process_return_value:{return_value}'.format(return_value=eval_process_return_value))
 
     def select_new_images(self, thresh):
@@ -215,6 +217,8 @@ class Model(object):
                                                 dataset_image_dir=self._train_image_dir,
                                                 dataset_annotations=self._next_gen_annotations,
                                                 eval_output_file=self._new_data_eval_file))
+            if eval_process_new_data_return_value != 0:
+                raise ValueError('Could not create val score - Eval of val failed')
             logging.info('eval_process_new_data_return_value:{return_value}'.format(return_value=eval_process_new_data_return_value))
             logging.info('select new images')
             self.select_new_images(thresh=thresh)
