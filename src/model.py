@@ -125,7 +125,7 @@ class Model(object):
                 ann['num_keypoints'] = mock_num_keypoints
                 ann['keypoints'] = mock_keypoints
             else:
-                ann['num_keypoints'] = sum([1 for i in ann['keypoints'] if i > 0]) / 3
+                ann['num_keypoints'] = sum([1 for i in ann['keypoints'][::3] if i > 0])
             ann['id'] = max_id + 1
             max_id += 1
             # add key, value iscrowd, 0
