@@ -33,7 +33,7 @@ If not, try to reboot the machine using the reboot command:
 `reboot`
 
 6. pull the docker files code:
-`git clone --branch noisy-student-flow https://github.com/MatanAvitan/noisy_student.git`
+`git clone --branch noisy-student-flow-prev https://github.com/MatanAvitan/noisy_student.git`
 
 7. Optional: run the following command in tmux - run in shell:
 `tmux`
@@ -44,7 +44,6 @@ If not, try to reboot the machine using the reboot command:
 9. Create your AWS Credentials (AWS_ACCESS_ID and AWS_ACCESS_KEY) - create them as local environment variables on your instance.
 
 10. There are 2 options for running the noisy_student algorithm: either docker or shell script.
-(When running in docker always use --env CREATE_IMAGES=FALSE since creating images does not work in docker environment )
 
 **Using Docker - see sections 10 to 19:**
 
@@ -59,7 +58,6 @@ If not, try to reboot the machine using the reboot command:
                  --name noisystudent \
                  --env MOCK_RUN=FALSE \
                  --env MOCK_ONE_MODEL=FALSE \
-                 --env CREATE_IMAGES=FALSE \
                  --env NUM_TRAIN_EPOCHS=140 \
                  --env ANNOTATIONS_SCORE_INITIAL_THRESH=0.65 \
                  --env S3_BUCKET_NAME=<your bucket name> \
@@ -75,7 +73,6 @@ Note: we did not use docker-compose in this stage since docker compose does not 
                  --name noisystudent \
                  --env MOCK_RUN=TRUE \
                  --env MOCK_ONE_MODEL=FALSE \
-                 --env CREATE_IMAGES=FALSE \
                  --env S3_BUCKET_NAME=<your bucket name> \
                  --env EXPERIMENT_NAME=<your experiment name> \
                  -p 6006:6006 \
@@ -100,7 +97,7 @@ and run inside docker:
 `sudo docker container rm $(sudo docker container ls -aq)`
 
 18. To pull code from git, clear containers, build noisy student and run noisy student:
-`git pull && sudo docker container rm $(sudo docker container ls -aq) && sudo docker-compose build --build-arg AWS_ACCESS_ID=$AWS_ACCESS_ID --build-arg AWS_ACCESS_KEY=$AWS_ACCESS_KEY && <your docker run command - see sections 12 and 13>`
+`git pull origin noisy-student-flow-prev && sudo docker container rm $(sudo docker container ls -aq) && sudo docker-compose build --build-arg AWS_ACCESS_ID=$AWS_ACCESS_ID --build-arg AWS_ACCESS_KEY=$AWS_ACCESS_KEY && <your docker run command - see sections 12 and 13>`
 
 19. To run TensorBoard while the container is running:
 Make sure that in your run command you've added `-p 6006:6006`
@@ -113,9 +110,9 @@ And in your local machine run the following to forward the port: `ssh -i <your a
 **Using Shell scripts - see sections 20 to 22:**
 
 20. Create additional environment variables, depending on your run configuration, for example for a full mock run (including creating images):
-`export S3_BUCKET_NAME=<your bucket name> ; export EXPERIMENT_NAME=<your experiment name> ; export MOCK_RUN=TRUE ; export MOCK_ONE_MODEL=FALSE; export CREATE_IMAGES=FALSE`
+`export S3_BUCKET_NAME=<your bucket name> ; export EXPERIMENT_NAME=<your experiment name> ; export MOCK_RUN=TRUE ; export MOCK_ONE_MODEL=FALSE;`
 And for a full run :
-`export S3_BUCKET_NAME=<your bucket name> ; export EXPERIMENT_NAME=<your experiment name> ; export MOCK_RUN=FALSE ; export MOCK_ONE_MODEL=FALSE; export CREATE_IMAGES=FALSE; export ANNOTATIONS_SCORE_INITIAL_THRESH=0.65 ; export NUM_TRAIN_EPOCHS=140`
+`export S3_BUCKET_NAME=<your bucket name> ; export EXPERIMENT_NAME=<your experiment name> ; export MOCK_RUN=FALSE ; export MOCK_ONE_MODEL=FALSE; export ANNOTATIONS_SCORE_INITIAL_THRESH=0.65 ; export NUM_TRAIN_EPOCHS=140`
 
 21. run: `./install_collect_data.sh`
 

@@ -10,8 +10,6 @@ from consts import (NUM_TRAIN_EPOCHS,
                     AWS_ACCESS_ID,
                     AWS_ACCESS_KEY,
                     MOCK_ONE_MODEL,
-                    CREATE_IMAGES,
-                    MOCK_RUN,
                     ANNOTATIONS_SCORE_INITIAL_THRESH,
                     ANNOTATION_SCORE_DECREASE,
                     STUDENT_TEACHER_LOOP)
@@ -20,7 +18,6 @@ from data_consts import (ANNOTATIONS_DIR,
                          TRAIN_IMAGE_DIR,
                          ORIGINAL_ANNOTATIONS_DIR,
                          ORIGINAL_VAL_ANNOTATION_FILE,
-                         ORIGINAL_TRAIN_ANNOTATION_FILE,
                          VAL_IMAGE_DIR,
                          OPENPIFPAF_PATH,
                          NEW_ANNOTATIONS_FILE_PREFIX,
@@ -67,12 +64,12 @@ def create_full_data_model_for_comparison(model_idx):
                               train_annotations=os.path.join(ANNOTATIONS_DIR,
                                                              NEW_ANNOTATIONS_DIR,
                                                              ANNOTATIONS_FILE_FULL_MODEL),
+                              original_train_annotations=None,
                               val_image_dir=VAL_IMAGE_DIR,
                               val_annotations=os.path.join(ANNOTATIONS_DIR,
                                                            ORIGINAL_ANNOTATIONS_DIR,
                                                            ORIGINAL_VAL_ANNOTATION_FILE),
                               next_gen_annotations=None,
-                              second_next_gen_annotations=None,
                               full_data_model=True)
     return full_data_model
 
@@ -81,26 +78,25 @@ def main():
     # variables: initial_model_idx, curr_thresh
     initial_model_idx = 0
     curr_thresh = ANNOTATIONS_SCORE_INITIAL_THRESH
+    original_train_annotations = os.path.join(ANNOTATIONS_DIR,
+                                              NEW_ANNOTATIONS_DIR,
+                                              '{prefix}_{model_idx}'.format(prefix=NEW_ANNOTATIONS_FILE_PREFIX,
+                                                                            model_idx=initial_model_idx))
+    next_gen_annotations = os.path.join(ANNOTATIONS_DIR,
+                                        NEW_ANNOTATIONS_DIR,
+                                        '{prefix}_{model_idx}'.format(prefix=NEW_ANNOTATIONS_FILE_PREFIX,
+                                                                      model_idx=initial_model_idx+1))
     teacher = Teacher(model_type='openpifpaf',
                       model_idx=initial_model_idx,
                       num_train_epochs=NUM_TRAIN_EPOCHS,
                       train_image_dir=TRAIN_IMAGE_DIR,
-                      train_annotations=os.path.join(ANNOTATIONS_DIR,
-                                                     NEW_ANNOTATIONS_DIR,
-                                                     '{prefix}_{model_idx}'.format(prefix=NEW_ANNOTATIONS_FILE_PREFIX,
-                                                                                   model_idx=initial_model_idx)),
+                      train_annotations=original_train_annotations,
+                      original_train_annotations=original_train_annotations,
                       val_image_dir=VAL_IMAGE_DIR,
                       val_annotations=os.path.join(ANNOTATIONS_DIR,
                                                    ORIGINAL_ANNOTATIONS_DIR,
                                                    ORIGINAL_VAL_ANNOTATION_FILE),
-                      next_gen_annotations=os.path.join(ANNOTATIONS_DIR,
-                                                        NEW_ANNOTATIONS_DIR,
-                                                        '{prefix}_{model_idx}'.format(prefix=NEW_ANNOTATIONS_FILE_PREFIX,
-                                                                                      model_idx=initial_model_idx+1)),
-                      second_next_gen_annotations=os.path.join(ANNOTATIONS_DIR,
-                                                             NEW_ANNOTATIONS_DIR,
-                                                             '{prefix}_{model_idx}'.format(prefix=NEW_ANNOTATIONS_FILE_PREFIX,
-                                                                                           model_idx=initial_model_idx+2)))
+                      next_gen_annotations=next_gen_annotations)
 
     logging.info('********************************************************************')
     logging.info('*************************   Model No {model_idx}.    *************************'.format(model_idx=initial_model_idx))
@@ -116,20 +112,13 @@ def main():
     teacher.save_results(experiment_name=EXPERIMENT_NAME)
     teacher.save_logs(experiment_name=EXPERIMENT_NAME)
     teacher.save_model(experiment_name=EXPERIMENT_NAME)
-    if CREATE_IMAGES == 'TRUE':
-        teacher.create_images_for_tb(experiment_name=EXPERIMENT_NAME,
-                                     tb_writer=tb_writer,
-                                     tb_image_output_dir=TB_IMAGE_OUTPUT_DIR_NAME)
     if MOCK_ONE_MODEL == 'TRUE':
         return
 
     for model_idx in range(initial_model_idx+1, STUDENT_TEACHER_LOOP):
         last_model_in_loop = model_idx == STUDENT_TEACHER_LOOP-1
         if not last_model_in_loop:
-            curr_next_gen_annotations = os.path.join(ANNOTATIONS_DIR,
-                                                     NEW_ANNOTATIONS_DIR,
-                                                     '{prefix}_{model_idx}'.format(prefix=NEW_ANNOTATIONS_FILE_PREFIX,
-                                                                                   model_idx=model_idx+1))
+            curr_next_gen_annotations = next_gen_annotations
         else:
             curr_next_gen_annotations = None
         new_student = Student(model_type='openpifpaf',
@@ -139,15 +128,12 @@ def main():
                               train_annotations=os.path.join(OPENPIFPAF_PATH,
                                                              '{prefix}_{model_idx}'.format(prefix=MERGED_TRAIN_ANNOTATIONS_FILE_PREFIX,
                                                                                            model_idx=model_idx)),
+                              original_train_annotations=original_train_annotations,
                               val_image_dir=VAL_IMAGE_DIR,
                               val_annotations=os.path.join(ANNOTATIONS_DIR,
                                                            ORIGINAL_ANNOTATIONS_DIR,
                                                            ORIGINAL_VAL_ANNOTATION_FILE),
-                              next_gen_annotations=curr_next_gen_annotations,
-                              second_next_gen_annotations=os.path.join(ANNOTATIONS_DIR,
-                                                                     NEW_ANNOTATIONS_DIR,
-                                                                     '{prefix}_{model_idx}'.format(prefix=NEW_ANNOTATIONS_FILE_PREFIX,
-                                                                                                   model_idx=model_idx+2)))
+                              next_gen_annotations=curr_next_gen_annotations)
 
         logging.info('********************************************************************')
         logging.info('*************************   Model No {model_idx}.    *************************'.format(model_idx=model_idx))
@@ -165,10 +151,6 @@ def main():
         teacher.save_results(experiment_name=EXPERIMENT_NAME)
         teacher.save_logs(experiment_name=EXPERIMENT_NAME)
         teacher.save_model(experiment_name=EXPERIMENT_NAME)
-        if CREATE_IMAGES == 'TRUE':
-            teacher.create_images_for_tb(experiment_name=EXPERIMENT_NAME,
-                                         tb_writer=tb_writer,
-                                         tb_image_output_dir=TB_IMAGE_OUTPUT_DIR_NAME)
 
     full_data_model = create_full_data_model_for_comparison(model_idx+1)
     full_data_model.fit()
@@ -176,10 +158,6 @@ def main():
     full_data_model.save_results(experiment_name=EXPERIMENT_NAME)
     full_data_model.save_logs(experiment_name=EXPERIMENT_NAME)
     full_data_model.save_model(experiment_name=EXPERIMENT_NAME)
-    if CREATE_IMAGES == 'TRUE':
-        full_data_model.create_images_for_tb(experiment_name=EXPERIMENT_NAME,
-                                     tb_writer=tb_writer,
-                                     tb_image_output_dir=TB_IMAGE_OUTPUT_DIR_NAME)
     tb_writer.close()
     upload_tb_logs_to_s3(experiment_name=EXPERIMENT_NAME)
 

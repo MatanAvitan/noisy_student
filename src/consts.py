@@ -15,7 +15,6 @@ S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME")
 EXPERIMENT_NAME = os.getenv("EXPERIMENT_NAME")
 AWS_ACCESS_ID = os.getenv("AWS_ACCESS_ID")
 AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY")
-CREATE_IMAGES = os.getenv("CREATE_IMAGES")
 
 TRAIN_COMMAND_TEACHER = """cd {openpifpaf_path} && \
                    python -m openpifpaf.train \
