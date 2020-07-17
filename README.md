@@ -101,7 +101,7 @@ and run inside docker:
 `sudo docker container rm $(sudo docker container ls -aq)`
 
 18. To pull code from git, clear containers, build noisy student and run noisy student:
-`git pull origin noisy-student-flow-prev && sudo docker container rm $(sudo docker container ls -aq) && sudo docker-compose build --build-arg AWS_ACCESS_ID=$AWS_ACCESS_ID --build-arg AWS_ACCESS_KEY=$AWS_ACCESS_KEY && <your docker run command - see sections 12 and 13>`
+`git pull origin master && sudo docker container rm $(sudo docker container ls -aq) && sudo docker-compose build --build-arg AWS_ACCESS_ID=$AWS_ACCESS_ID --build-arg AWS_ACCESS_KEY=$AWS_ACCESS_KEY && <your docker run command - see sections 12 and 13>`
 
 19. To run TensorBoard while the container is running:
 Make sure that in your run command you've added `-p 6006:6006`
