@@ -111,8 +111,7 @@ ARG AWS_ACCESS_ID
 ARG AWS_ACCESS_KEY
 ENV AWS_ACCESS_ID=$AWS_ACCESS_ID
 ENV AWS_ACCESS_KEY=$AWS_ACCESS_KEY
-# For building openpifpaf
-ENV STUPID=STUPIDDDDD
+
 
 # create openpifpaf directory
 RUN cd /noisy_student/src && git clone --single-branch --branch noisy-student https://github.com/atalyaalon/openpifpaf.git
