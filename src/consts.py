@@ -61,6 +61,7 @@ TRAIN_COMMAND_STUDENT = """cd {openpifpaf_path} && \
                        --basenet=shufflenetv2k16w \
                        --headnets cif caf caf25 \
                        --loader-workers 24 \
+                       --add-noise \
                        --coco-train-image-dir {train_image_dir} \
                        --cocokp-train-annotations {train_annotations} \
                        --coco-val-image-dir {val_image_dir} \
