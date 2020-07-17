@@ -61,7 +61,7 @@ If not, try to reboot the machine using the reboot command:
                  --env RUN_FULL_MODEL=FALSE \
                  --env NUM_TRAIN_EPOCHS=140 \
                  --env ANNOTATIONS_SCORE_INITIAL_THRESH=0.65 \
-                 --env STUDENT_TEACHER_LOOP=30 \
+                 --env STUDENT_TEACHER_LOOP=15 \
                  --env S3_BUCKET_NAME=<your bucket name> \
                  --env EXPERIMENT_NAME=<your experiment name> \
                  -p 6006:6006 \
