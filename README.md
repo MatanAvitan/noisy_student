@@ -58,6 +58,7 @@ If not, try to reboot the machine using the reboot command:
                  --name noisystudent \
                  --env MOCK_RUN=FALSE \
                  --env MOCK_ONE_MODEL=FALSE \
+                 --env RUN_FULL_MODEL=FALSE \
                  --env NUM_TRAIN_EPOCHS=140 \
                  --env ANNOTATIONS_SCORE_INITIAL_THRESH=0.65 \
                  --env STUDENT_TEACHER_LOOP=30 \
@@ -74,6 +75,7 @@ Note: we did not use docker-compose in this stage since docker compose does not 
                  --name noisystudent \
                  --env MOCK_RUN=TRUE \
                  --env MOCK_ONE_MODEL=FALSE \
+                 --env RUN_FULL_MODEL=FALSE \
                  --env STUDENT_TEACHER_LOOP=2 \
                  --env S3_BUCKET_NAME=<your bucket name> \
                  --env EXPERIMENT_NAME=<your experiment name> \

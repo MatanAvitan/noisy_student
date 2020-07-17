@@ -12,7 +12,8 @@ from consts import (NUM_TRAIN_EPOCHS,
                     MOCK_ONE_MODEL,
                     ANNOTATIONS_SCORE_INITIAL_THRESH,
                     ANNOTATION_SCORE_DECREASE,
-                    STUDENT_TEACHER_LOOP)
+                    STUDENT_TEACHER_LOOP,
+                    RUN_FULL_MODEL)
 from data_consts import (ANNOTATIONS_DIR,
                          NEW_ANNOTATIONS_DIR,
                          TRAIN_IMAGE_DIR,
@@ -151,14 +152,13 @@ def main():
         teacher.save_results(experiment_name=EXPERIMENT_NAME)
         teacher.save_logs(experiment_name=EXPERIMENT_NAME)
         teacher.save_model(experiment_name=EXPERIMENT_NAME)
-
-    full_data_model = create_full_data_model_for_comparison(model_idx+1)
-    full_data_model.fit()
-    full_data_model.create_val_score()
-    full_data_model.save_results(experiment_name=EXPERIMENT_NAME)
-    full_data_model.save_logs(experiment_name=EXPERIMENT_NAME)
-    full_data_model.save_model(experiment_name=EXPERIMENT_NAME)
-    tb_writer.close()
+    if RUN_FULL_MODEL == 'TRUE':
+        full_data_model = create_full_data_model_for_comparison(model_idx+1)
+        full_data_model.fit()
+        full_data_model.create_val_score()
+        full_data_model.save_results(experiment_name=EXPERIMENT_NAME)
+        full_data_model.save_logs(experiment_name=EXPERIMENT_NAME)
+        full_data_model.save_model(experiment_name=EXPERIMENT_NAME)
     upload_tb_logs_to_s3(experiment_name=EXPERIMENT_NAME)
 
 if __name__ == '__main__':
