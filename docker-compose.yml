@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  noisy_student:
+    build: .
+    container_name: noisystudent
+    image: bestteam/noisystudent:latest
+    restart: always
+    volumes:
+      - data:/noisy_student
+volumes:
+  data:
