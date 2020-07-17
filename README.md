@@ -33,7 +33,7 @@ If not, try to reboot the machine using the reboot command:
 `reboot`
 
 6. pull the docker files code:
-`git clone --branch noisy-student-flow-prev https://github.com/MatanAvitan/noisy_student.git`
+`git clone --branch master https://github.com/MatanAvitan/noisy_student.git`
 
 7. Optional: run the following command in tmux - run in shell:
 `tmux`
