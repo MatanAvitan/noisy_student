@@ -36,15 +36,15 @@ s3 = boto3.resource('s3',
                     aws_access_key_id=AWS_ACCESS_ID,
                     aws_secret_access_key=AWS_ACCESS_KEY)
 
-def create_val_score_and_upload_to_s3(checkpoint, metric='oks'):
+def create_val_score_and_upload_to_s3(checkpoint_path, checkpoint_name, metric='oks'):
     """
     creates val score files for val data
     """
-    eval_output_file = 'eval_of_val_dataset_checkpoint_{checkpoint}'.format(checkpoint=checkpoint)
-    logging.info('Creating val scores of checkpoint {checkpoint}'.format(checkpoint=checkpoint))
+    eval_output_file = 'eval_of_val_dataset_checkpoint_{checkpoint}'.format(checkpoint=checkpoint_name)
+    logging.info('Creating val scores of checkpoint {checkpoint}'.format(checkpoint=checkpoint_name))
     if metric == 'oks':
         eval_process_return_value = os.system(EVAL_VAL_COMMAND.format(openpifpaf_path=OPENPIFPAF_PATH,
-                                                                      model_output_file=checkpoint,
+                                                                      model_output_file=checkpoint_path,
                                                                       dataset_image_dir=VAL_IMAGE_DIR,
                                                                       dataset_annotations=os.path.join(ANNOTATIONS_DIR,
                                                                                                        ORIGINAL_ANNOTATIONS_DIR,
@@ -58,15 +58,15 @@ def create_val_score_and_upload_to_s3(checkpoint, metric='oks'):
         eval_output_stats_file_path = os.path.join(OPENPIFPAF_PATH, eval_output_stats_file_name)
         if os.path.exists(eval_output_stats_file_path):
             s3.meta.client.upload_file(eval_output_stats_file_path, S3_BUCKET_NAME, os.path.join(experiment_name, 'epocs_val_stats', eval_output_stats_file_name))
-        logging.info('Finished Saving Results of checkpoint {checkpoint}'.format(checkpoint=checkpoint))
+        logging.info('Finished Saving Results of checkpoint {checkpoint}'.format(checkpoint=checkpoint_name))
 
 def main():
     for root,dirs,files in os.walk(OPENPIFPAF_PATH):
-        for file in files:
+        for file in sorted(files):
             r1 = re.compile('epoch')
             if r1.search(file) and int(file[-3:]) % 10 == 0:
                 filepath = os.path.join(root, file)
-                create_val_score_and_upload_to_s3(filepath)
+                create_val_score_and_upload_to_s3(filepath, file)
 
 
 if __name__ == '__main__':
