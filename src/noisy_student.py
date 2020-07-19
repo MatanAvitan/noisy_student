@@ -92,7 +92,7 @@ def main():
                                 aws_secret_access_key=AWS_ACCESS_KEY)
             local_model_path = os.path.join(OPENPIFPAF_PATH, INITIAL_MODEL)
             with open(local_model_path, 'wb') as local_model:
-                s3.meta.client.download_file(Bucket=INITIAL_MODEL_BUCKET, Key=INITIAL_MODEL, Fileobj=local_model)
+                s3.meta.client.download_file(INITIAL_MODEL_BUCKET, INITIAL_MODEL, local_model)
             logging.info('********************************************************************')
             logging.info('*************************   Model No {model_idx}.    *************************'.format(model_idx=initial_model_idx))
             logging.info('********************************************************************')
