@@ -69,7 +69,25 @@ If not, try to reboot the machine using the reboot command:
 
 Note: we did not use docker-compose in this stage since docker compose does not suppor NVIDIA GPUs yet - see [the following issue](https://github.com/docker/compose/issues/6691)
 
-13. For Mock-Run use the following command:
+13. To run the docker from starting a previous model as a teacher:
+`sudo docker run --gpus all \
+                 --shm-size=100gb \
+                 --name noisystudent \
+                 --env MOCK_RUN=FALSE \
+                 --env MOCK_ONE_MODEL=FALSE \
+                 --env RUN_FULL_MODEL=FALSE \
+                 --env NUM_TRAIN_EPOCHS=140 \
+                 --env ANNOTATIONS_SCORE_INITIAL_THRESH=0.4 \
+                 --env INITIAL_MODEL=<model_name> \
+                 --env INITIAL_MODEL_BUCKET=<bucket_name_of_initial_model> \
+                 --env BLUR_MAX_SIGMA=<blur_max_sigma, for example 3> \
+                 --env STUDENT_TEACHER_LOOP=15 \
+                 --env S3_BUCKET_NAME=<your bucket name> \
+                 --env EXPERIMENT_NAME=<your experiment name> \
+                 -p 6006:6006 \
+                bestteam/noisystudent:latest`
+
+14. For Mock-Run use the following command:
 `sudo docker run --gpus all \
                  --shm-size=100gb \
                  --name noisystudent \
@@ -82,9 +100,9 @@ Note: we did not use docker-compose in this stage since docker compose does not 
                  -p 6006:6006 \
                  bestteam/noisystudent:latest`
 
-14. If you want to mock the creation of once model only, change --env MOCK_ONE_MODEL=TRUE in the run command
+15. If you want to mock the creation of once model only, change --env MOCK_ONE_MODEL=TRUE in the run command
 
-15. To find the trained models or logs in the docker - start the noisystudent container, and check the outputs directory:
+16. To find the trained models or logs in the docker - start the noisystudent container, and check the outputs directory:
 ```sh
 sudo docker start noisystudent
 sudo docker exec -it noisystudent bash
@@ -94,16 +112,16 @@ and run inside docker:
 
 (To exit the container use ctrl-D)
 
-16. To stop the noisystudent container run:
+17. To stop the noisystudent container run:
 `sudo docker stop noisystudent`
 
-17. To clear the containers run:
+18. To clear the containers run:
 `sudo docker container rm $(sudo docker container ls -aq)`
 
-18. To pull code from git, clear containers, build noisy student and run noisy student:
+19. To pull code from git, clear containers, build noisy student and run noisy student:
 `git pull origin master && sudo docker container rm $(sudo docker container ls -aq) && sudo docker-compose build --build-arg AWS_ACCESS_ID=$AWS_ACCESS_ID --build-arg AWS_ACCESS_KEY=$AWS_ACCESS_KEY && <your docker run command - see sections 12 and 13>`
 
-19. To run TensorBoard while the container is running:
+20. To run TensorBoard while the container is running:
 Make sure that in your run command you've added `-p 6006:6006`
 Now run the following:
 `sudo docker exec -it noisystudent bash`
@@ -113,11 +131,11 @@ And in your local machine run the following to forward the port: `ssh -i <your a
 
 **Using Shell scripts - see sections 20 to 22:**
 
-20. Create additional environment variables, depending on your run configuration, for example for a full mock run (including creating images):
+21. Create additional environment variables, depending on your run configuration, for example for a full mock run (including creating images):
 `export S3_BUCKET_NAME=<your bucket name> ; export EXPERIMENT_NAME=<your experiment name> ; export MOCK_RUN=TRUE ; export MOCK_ONE_MODEL=FALSE;`
 And for a full run :
 `export S3_BUCKET_NAME=<your bucket name> ; export EXPERIMENT_NAME=<your experiment name> ; export MOCK_RUN=FALSE ; export MOCK_ONE_MODEL=FALSE; export ANNOTATIONS_SCORE_INITIAL_THRESH=0.65 ; export NUM_TRAIN_EPOCHS=140`
 
-21. run: `./install_collect_data.sh`
+22. run: `./install_collect_data.sh`
 
-22. run `./run_noisy_student.sh`
+23. run `./run_noisy_student.sh`

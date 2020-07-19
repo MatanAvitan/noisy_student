@@ -1,7 +1,6 @@
 import os
 import logging
 import boto3
-from torch.utils.tensorboard import SummaryWriter
 from student import Student
 from teacher import Teacher
 from consts import (NUM_TRAIN_EPOCHS,
@@ -13,7 +12,9 @@ from consts import (NUM_TRAIN_EPOCHS,
                     ANNOTATIONS_SCORE_INITIAL_THRESH,
                     ANNOTATION_SCORE_DECREASE,
                     STUDENT_TEACHER_LOOP,
-                    RUN_FULL_MODEL)
+                    RUN_FULL_MODEL,
+                    INITIAL_MODEL,
+                    INITIAL_MODEL_BUCKET)
 from data_consts import (ANNOTATIONS_DIR,
                          NEW_ANNOTATIONS_DIR,
                          TRAIN_IMAGE_DIR,
@@ -71,33 +72,64 @@ def create_full_data_model_for_comparison(model_idx):
 def main():
     create_results_dir_in_s3(experiment_name=EXPERIMENT_NAME)
     # variables: initial_model_idx, curr_thresh
-    initial_model_idx = 0
-    curr_thresh = ANNOTATIONS_SCORE_INITIAL_THRESH
     original_train_annotations = os.path.join(ANNOTATIONS_DIR,
                                               NEW_ANNOTATIONS_DIR,
                                               '{prefix}_{model_idx}'.format(prefix=NEW_ANNOTATIONS_FILE_PREFIX,
-                                                                            model_idx=initial_model_idx))
+                                                                            model_idx=0))
     next_gen_annotations = os.path.join(ANNOTATIONS_DIR,
                                         NEW_ANNOTATIONS_DIR,
                                         '{prefix}_{model_idx}'.format(prefix=NEW_ANNOTATIONS_FILE_PREFIX,
-                                                                      model_idx=initial_model_idx+1))
-    teacher = Teacher(model_type='openpifpaf',
-                      model_idx=initial_model_idx,
-                      num_train_epochs=NUM_TRAIN_EPOCHS,
-                      train_image_dir=TRAIN_IMAGE_DIR,
-                      train_annotations=original_train_annotations,
-                      original_train_annotations=original_train_annotations,
-                      val_image_dir=VAL_IMAGE_DIR,
-                      val_annotations=os.path.join(ANNOTATIONS_DIR,
-                                                   ORIGINAL_ANNOTATIONS_DIR,
-                                                   ORIGINAL_VAL_ANNOTATION_FILE),
-                      next_gen_annotations=next_gen_annotations)
+                                                                      model_idx=1))
 
-    logging.info('********************************************************************')
-    logging.info('*************************   Model No {model_idx}.    *************************'.format(model_idx=initial_model_idx))
-    logging.info('********************************************************************')
-    logging.info('Fitting Model no.{model_idx}'.format(model_idx=initial_model_idx))
-    teacher.fit()
+    if INITIAL_MODEL is not None:
+        if INITIAL_MODEL_BUCKET is not None:
+            # assuming model name is in format model_type_{model_type}_model_no_{model_idx}
+            initial_model_idx = int(INITIAL_MODEL[-1])
+            curr_thresh = ANNOTATIONS_SCORE_INITIAL_THRESH
+            # download model from S3 bucket
+            s3 = boto3.resource('s3',
+                                aws_access_key_id=AWS_ACCESS_ID,
+                                aws_secret_access_key=AWS_ACCESS_KEY)
+            local_model_path = os.path.join(OPENPIFPAF_PATH, INITIAL_MODEL)
+            with open(local_model_path, 'wb') as local_model:
+                s3.meta.client.download_file(Bucket=INITIAL_MODEL_BUCKET, Key=INITIAL_MODEL, Fileobj=local_model)
+            logging.info('********************************************************************')
+            logging.info('*************************   Model No {model_idx}.    *************************'.format(model_idx=initial_model_idx))
+            logging.info('********************************************************************')
+            teacher = Teacher(model_type='openpifpaf',
+                              model_idx=initial_model_idx,
+                              num_train_epochs=NUM_TRAIN_EPOCHS,
+                              train_image_dir=TRAIN_IMAGE_DIR,
+                              train_annotations=original_train_annotations,
+                              original_train_annotations=original_train_annotations,
+                              val_image_dir=VAL_IMAGE_DIR,
+                              val_annotations=os.path.join(ANNOTATIONS_DIR,
+                                                           ORIGINAL_ANNOTATIONS_DIR,
+                                                           ORIGINAL_VAL_ANNOTATION_FILE),
+                              next_gen_annotations=next_gen_annotations)
+        else:
+            raise EnvironmentError('INITIAL_MODEL_BUCKET should exist if INITIAL_MODEL exists')
+    else:
+        initial_model_idx = 0
+        curr_thresh = ANNOTATIONS_SCORE_INITIAL_THRESH
+        logging.info('********************************************************************')
+        logging.info('*************************   Model No {model_idx}.    *************************'.format(model_idx=initial_model_idx))
+        logging.info('********************************************************************')
+        teacher = Teacher(model_type='openpifpaf',
+                          model_idx=initial_model_idx,
+                          num_train_epochs=NUM_TRAIN_EPOCHS,
+                          train_image_dir=TRAIN_IMAGE_DIR,
+                          train_annotations=original_train_annotations,
+                          original_train_annotations=original_train_annotations,
+                          val_image_dir=VAL_IMAGE_DIR,
+                          val_annotations=os.path.join(ANNOTATIONS_DIR,
+                                                       ORIGINAL_ANNOTATIONS_DIR,
+                                                       ORIGINAL_VAL_ANNOTATION_FILE),
+                          next_gen_annotations=next_gen_annotations)
+        logging.info('Fitting Model no.{model_idx}'.format(model_idx=initial_model_idx))
+        teacher.fit()
+
+
     logging.info('Creating Validation Scores to Model no.{model_idx}'.format(model_idx=initial_model_idx))
     teacher.create_val_score()
     logging.info('Creating New data Scores and New Annotations to Model no.{model_idx}'.format(model_idx=initial_model_idx))

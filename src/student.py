@@ -1,7 +1,7 @@
 import os
 import logging
 from model import Model
-from consts import TRAIN_COMMAND_STUDENT
+from consts import TRAIN_COMMAND_STUDENT, BLUR_MAX_SIGMA
 from data_consts import OPENPIFPAF_PATH
 
 
@@ -14,6 +14,7 @@ class Student(Model):
         train_process_return_value = os.system(TRAIN_COMMAND_STUDENT.format(openpifpaf_path=OPENPIFPAF_PATH,
                                                                             num_train_epochs=self._num_train_epochs,
                                                                             train_image_dir=self._train_image_dir,
+                                                                            blur_max_sigma=BLUR_MAX_SIGMA,
                                                                             train_annotations=self._train_annotations,
                                                                             val_image_dir=self._val_image_dir,
                                                                             val_annotations=self._val_annotations,

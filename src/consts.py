@@ -16,6 +16,9 @@ S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME")
 EXPERIMENT_NAME = os.getenv("EXPERIMENT_NAME")
 AWS_ACCESS_ID = os.getenv("AWS_ACCESS_ID")
 AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY")
+INITIAL_MODEL = os.getenv("INITIAL_MODEL", default=None)
+INITIAL_MODEL_BUCKET = os.getenv("INITIAL_MODEL_BUCKET", default=None)
+BLUR_MAX_SIGMA = float(os.getenv("BLUR_MAX_SIGMA"))
 
 TRAIN_COMMAND_TEACHER = """cd {openpifpaf_path} && \
                    python -m openpifpaf.train \
@@ -62,6 +65,7 @@ TRAIN_COMMAND_STUDENT = """cd {openpifpaf_path} && \
                        --headnets cif caf caf25 \
                        --loader-workers 24 \
                        --add-noise \
+                       --blur-max-sigma {blur_max_sigma} \
                        --coco-train-image-dir {train_image_dir} \
                        --cocokp-train-annotations {train_annotations} \
                        --coco-val-image-dir {val_image_dir} \
