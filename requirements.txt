@@ -3,7 +3,7 @@ sklearn
 argparse
 funcy
 Cython
-numpy==1.17.5
+numpy==1.22.0
 pysparkling
 python-json-logger
 scipy
